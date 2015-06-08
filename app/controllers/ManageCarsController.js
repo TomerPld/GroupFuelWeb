@@ -2,6 +2,7 @@
  * Created by matansab on 5/18/2015.
  */
 app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTableParams, UserService) {
+
     'use strict';
     (function () {
         $scope.UserService = UserService;
@@ -17,6 +18,7 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
         }, {
             total: 0,
             getData: function ($defer, params) {
+
                 // Binding table's data. $scope.userCars == [] at initialization,
                 // so we actually not showing anything right now.
                 var data = $scope.userCars;
@@ -46,7 +48,6 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
             }
         });
     }
-
     $scope.$watch('UserService.logged', updateCars);
 
     /*
