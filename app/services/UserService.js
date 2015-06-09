@@ -15,7 +15,7 @@ app.service('UserService', function ($modal) {
             return;
         }
         var modalInstance = $modal.open({
-            templateUrl : 'web_ui/app/partials/login.html',
+            templateUrl : 'GroupFuelWeb/app/partials/login.html',
             controller : 'LoginController'
         });
         modalInstance.result.then(

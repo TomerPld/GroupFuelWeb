@@ -8,7 +8,7 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
         "userCars": {},
         "numCars": 0,
         "fuelEvents": [],
-        "logSize": 0,
+        "logFull": false,
         "usage": []
     };
     (function (){
@@ -43,7 +43,7 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
             //events: {}
         };
         $scope.data = angular.copy(cleanData);
-        $scope.UserService = UserService;
+        $scope.doLogin = UserService.doLogin;
 
         // Initializing configuration for ngTable
         $scope.tableParams = new ngTableParams({
@@ -55,8 +55,6 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
         },  {
             total: 0,
             getData: function($defer, params) {
-                // Binding table's data. $scope.userCars == [] at initialization,
-                // so we actually not showing anything right now.
                 var data = $scope.data.usage;
                 var orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
                 $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
@@ -89,6 +87,7 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
         $scope.charts.fuelEvents.data = pieData;
         console.dir($scope.charts.fuelEvents.data);
     });
+
     function getCars () {
         if (!UserService.logged) {
             return;
@@ -96,7 +95,7 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
         Parse.Cloud.run('getOwnedCars', {}, {
             success: function (results) {
                 // TODO - if no cars -> show proper notification instead of an empty table.
-                $scope.data.numCars = results.length;
+                // $scope.data.numCars = results.length;
                 refineCarsDict(results);
                 updateUsage();
                 $scope.$digest();
@@ -154,18 +153,19 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
     }
 
     function getFuelEvents () {
-        // if logsize is not a mult of 10, means the last query ran over the end of the fuel events.
-        if (!UserService.logged || ($scope.data.logSize % 10) != 0) {
+        if (!UserService.logged || $scope.data.logFull) {
             return;
         }
         var query = new Parse.Query("Fueling");
         query.equalTo("User", UserService.currentUser);
         query.include("Car");
         query.limit(10);
-        query.skip($scope.data.logSize);
+        query.skip($scope.data.fuelEvents.length);
         query.find({
             success: function (results) {
-                $scope.data.logSize += results.length;
+                if (results.length < 10) {
+                    $scope.data.logFull = true;
+                }
                 refineFuelEvents(results);
                 $scope.$digest();
             },
