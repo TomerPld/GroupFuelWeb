@@ -1,7 +1,7 @@
 /**
  * Created by Tomer on 07/04/2015.
  */
-app.controller('UsageController', function ($scope, $filter, UserService, ngTableParams) {
+app.controller('UsageController', function ($scope, $filter, UserService, ngTableParams, Fueling) {
     'use strict';
     var cleanData = {
         "allCars": true,
@@ -86,7 +86,6 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
             pieData.push(dataObject);
         }
         $scope.charts.fuelEvents.data = pieData;
-        console.dir($scope.charts.fuelEvents.data);
     });
 
     function getCars () {
@@ -96,10 +95,9 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
         Parse.Cloud.run('getOwnedCars', {}, {
             success: function (results) {
                 // TODO - if no cars -> show proper notification instead of an empty table.
-                // $scope.data.numCars = results.length;
-                refineCarsDict(results);
+                createCarsDict(results);
                 updateUsage();
-                $scope.$digest();
+                //$scope.$digest();
             },
             error: function () {
                 console.log("failed to retrieve fueling log");
@@ -107,19 +105,13 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
         });
     }
 
-    function refineCarsDict (parseCars) {
-        $scope.data.userCars = {};
+    function createCarsDict (parseCars) {
+        var carsDict = {};
         for (var i = 0; i < parseCars.length; i++) {
-            var newCar = {};
-            var newModel = parseCars[i].get('Model');
-            newCar.model = newModel.get('Model');
-            newCar.make = newModel.get('Make');
-            newCar.year = newModel.get('Year');
-            newCar.number = parseCars[i].get('CarNumber');
-            newCar.mileage = parseCars[i].get('Mileage');
-            newCar.marked = true;
-            $scope.data.userCars[parseCars[i].id] = angular.copy(newCar);
+            parseCars[i].marked = true;
+            carsDict[parseCars[i].id] = angular.copy(parseCars[i]);
         }
+        $scope.data.userCars = carsDict;
     }
 
     function updateUsage () {
@@ -138,14 +130,14 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
                     var value = result[key];
                     value.carName = key;
                     if (key != 'total') {
-                        value.carName = $scope.data.userCars[key].make + " " + $scope.data.userCars[key].model;
+                        value.carName = $scope.data.userCars[key].get("Model").get("Make") + " " + $scope.data.userCars[key].get("Model").get("Model");
                     }
                     usage.push(value);
                 });
                 $scope.data.usage = usage;
                 $scope.tableParams.reload();
                 $scope.tableParams.total($scope.data.usage.length);
-                // $scope.$digest();
+                $scope.$digest();
             },
             error: function () {
                 console.log("Error: failed to retrieve usage");
@@ -167,35 +159,13 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
                 if (results.length < 10) {
                     $scope.data.logFull = true;
                 }
-                refineFuelEvents(results);
+                //refineFuelEvents(results);
+                $scope.data.fuelEvents = $scope.data.fuelEvents.concat(results);
                 $scope.$digest();
             },
             error: function () {
                 console.log("failed to retrieve fueling log");
             }
         });
-    }
-
-    /*
-     * Private function - gets a list of parse fueling objects and
-     * refines it to a bindable json.
-     * extra work - add gas station details.
-     */
-    function refineFuelEvents(parseFuelEvents) {
-        // $scope.data.fuelEvents = [];
-        for (var i = 0; i < parseFuelEvents.length; i++) {
-            var currentEvent = parseFuelEvents[i];
-            var currentCar = currentEvent.get('Car');
-            var newEvent = {};
-            newEvent.ID = currentEvent.id;
-            newEvent.amount = currentEvent.get('Amount');
-            newEvent.fuelType = currentEvent.get('FuelType');
-            newEvent.mileage = currentEvent.get('Mileage');
-            newEvent.price = currentEvent.get('Price');
-            newEvent.logDate = currentEvent.createdAt;
-            newEvent.carID = currentCar.id;
-            newEvent.carNumber = currentCar.get('CarNumber');
-            $scope.data.fuelEvents.push(angular.copy(newEvent));
-        }
     }
 });

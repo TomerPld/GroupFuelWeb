@@ -33,9 +33,8 @@
                     <ul class="list-group">
                         <!-- change later to filter instead of ng-if and show only first 10, add a button to show next 10 -->
                         <li class="list-group-item" ng-repeat="fuel in data.fuelEvents">
-                            On date {{ fuel.logDate }}, car {{ fuel.carNumber }} filled {{ fuel.amount }} liters and
-                            paid {{
-                            fuel.price }} NIS
+                            On date {{ fuel.LogDate }}, car {{ fuel.Car.CarNumber }} filled {{ fuel.Amount }} liters and
+                            paid {{ fuel.Price }} NIS
                         </li>
                     </ul>
                     <div class="panel-footer">
