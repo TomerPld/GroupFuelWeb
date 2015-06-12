@@ -1,4 +1,4 @@
-var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui.select2', 'nvd3']);
+var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui.select2', 'nvd3', 'cgBusy']);
 
 (function () {
     'use strict';
@@ -8,11 +8,16 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
 
     app.factory('Fueling', function () {
         var Fueling = Parse.Object.extend("Fueling");
-        var reqGetters = ["Amount", "FuelType", "Price"];
-        var reqSetters = ["Amount", "FuelType", "Price"];
-        bindParseObject(Fueling, reqGetters, reqSetters);
 
-        // Now define non-trivial getters and setters.
+        Fueling.prototype.__defineGetter__("Amount", function () {
+            return this.get("Amount");
+        });
+        Fueling.prototype.__defineGetter__("FuelType", function () {
+            return this.get("FuelType");
+        });
+        Fueling.prototype.__defineGetter__("Price", function () {
+            return this.get("Price");
+        });
         Fueling.prototype.__defineGetter__("LogDate", function () {
             var logDate = new Date(this.createdAt);
             return logDate.toDateString();
@@ -27,10 +32,13 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
 
     app.factory('Car', function () {
         var Car = Parse.Object.extend("Car");
-        var reqGetters = ["CarNumber", "Mileage", "Model"];
 
-        bindParseObject(Car, reqGetters);
-
+        Car.prototype.__defineGetter__("CarNumber", function () {
+            return this.get("CarNumber");
+        });
+        Car.prototype.__defineGetter__("Mileage", function () {
+            return this.get("Mileage");
+        });
         Car.prototype.__defineGetter__("Make", function () {
             var model = this.get("Model");
             return model.get("Make")
@@ -78,7 +86,8 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
 
 })();
 
-function bindParseObject(Obj, reqGetters, reqSetters) {
+/*function bindParseObject(name, reqGetters, reqSetters) {
+    var Obj = Parse.Object.extend(name);
     if (reqGetters !== undefined) {
         for (var i = 0; i < reqGetters.length; i++) {
             Obj.prototype.__defineGetter__(reqGetters[i], function () {
@@ -93,5 +102,5 @@ function bindParseObject(Obj, reqGetters, reqSetters) {
             });
         }
     }
-    //return Obj;
-}
+    return Obj;
+}*/

@@ -1,7 +1,7 @@
 /**
  * Created by matansab on 5/18/2015.
  */
-app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTableParams, UserService) {
+app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTableParams, UserService, Car) {
 
     'use strict';
     (function () {
@@ -37,10 +37,15 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
     function updateCars() {
         Parse.Cloud.run('getOwnedCars', {}, {
             success: function (results) {
-                refineCars(results);
+                //refineCars(results);
+                $scope.userCars = results;
                 // Updating the ngTable data
+                for (var car in $scope.userCars) {
+                    console.log(car.carNumber);
+                }
                 $scope.tableParams.reload();
                 $scope.tableParams.total($scope.userCars.length);
+                $scope.$digest();
             },
             error: function () {
                 // TODO - add notification error
@@ -96,6 +101,7 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
             function (res) {
                 console.log(res);
                 // show notification
-            });
+            }
+        );
     };
 });

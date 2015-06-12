@@ -1,7 +1,7 @@
 /**
  * Created by Tomer on 07/04/2015.
  */
-app.controller('UsageController', function ($scope, $filter, UserService, ngTableParams, Fueling) {
+app.controller('UsageController', function ($scope, $filter, UserService, UsageService, ngTableParams, Fueling, Car) {
     'use strict';
     var cleanData = {
         "allCars": true,
@@ -11,8 +11,17 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
         "logFull": false,
         "usage": []
     };
-    (function (){
+    (function () {
         $scope.UserService = UserService;
+        $scope.doLogin = UserService.doLogin;
+        $scope.data = angular.copy(cleanData);
+
+        // Promises dictionary for loading spinner
+        $scope.promises = {
+            'usage': undefined,
+            'cars': undefined,
+            'fuelEvents': undefined
+        };
         $scope.charts = {};
         $scope.charts.fuelEvents = {
             options: {
@@ -23,10 +32,8 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
                     "transitionDuration": 500,
                     "labelThreshold": 0.01,
                     "useInteractiveGuideline": false,
-                    "tooltipContent": function(key, y){
-                        console.log(key);
+                    "tooltipContent": function (key, y) {
                         return key;
-
                     },
                     "title": "Fuel Event Per Car",
                     "legend": {
@@ -40,11 +47,7 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
                 }
             },
             data: {}
-            //config: {},
-            //events: {}
         };
-        $scope.data = angular.copy(cleanData);
-        $scope.doLogin = UserService.doLogin;
 
         // Initializing configuration for ngTable
         $scope.tableParams = new ngTableParams({
@@ -53,9 +56,9 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
             sorting: {
                 carName: 'asc'
             }
-        },  {
+        }, {
             total: 0,
-            getData: function($defer, params) {
+            getData: function ($defer, params) {
                 var data = $scope.data.usage;
                 var orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
                 $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
@@ -81,31 +84,29 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
                 continue;
             }
             var dataObject = {};
-            dataObject["key"] = usage[i].carName;
+            dataObject.key = usage[i].carName;
             dataObject.y = usage[i].numOfEvents;
             pieData.push(dataObject);
         }
         $scope.charts.fuelEvents.data = pieData;
     });
 
-    function getCars () {
+    function getCars() {
         if (!UserService.logged) {
             return;
         }
-        Parse.Cloud.run('getOwnedCars', {}, {
-            success: function (results) {
-                // TODO - if no cars -> show proper notification instead of an empty table.
+        $scope.promises.cars = UsageService.getCars().then(
+            function (results) {
                 createCarsDict(results);
                 updateUsage();
-                //$scope.$digest();
             },
-            error: function () {
-                console.log("failed to retrieve fueling log");
+            function (err) {
+                console.log("Error: " + err);
             }
-        });
+        );
     }
 
-    function createCarsDict (parseCars) {
+    function createCarsDict(parseCars) {
         var carsDict = {};
         for (var i = 0; i < parseCars.length; i++) {
             parseCars[i].marked = true;
@@ -114,58 +115,36 @@ app.controller('UsageController', function ($scope, $filter, UserService, ngTabl
         $scope.data.userCars = carsDict;
     }
 
-    function updateUsage () {
-        var cars = [];
-        Object.keys($scope.data.userCars).forEach(function (key) {
-            var value = $scope.data.userCars[key];
-            if (value.marked) {
-                var carPointer = {"__type":"Pointer","className":"Car","objectId":key};
-                cars.push(carPointer);
-            }
-        });
-        Parse.Cloud.run('getUsage', {'cars': cars}, {
-            success: function (result) {
-                var usage = [];
-                Object.keys(result).forEach(function (key){
-                    var value = result[key];
-                    value.carName = key;
-                    if (key != 'total') {
-                        value.carName = $scope.data.userCars[key].get("Model").get("Make") + " " + $scope.data.userCars[key].get("Model").get("Model");
-                    }
-                    usage.push(value);
-                });
-                $scope.data.usage = usage;
+    function updateUsage() {
+        if (!UserService.logged) {
+            return;
+        }
+        $scope.promises.usage = UsageService.getUsage($scope.data.userCars).then(
+            function (results) {
+                $scope.data.usage = results;
                 $scope.tableParams.reload();
                 $scope.tableParams.total($scope.data.usage.length);
-                $scope.$digest();
             },
-            error: function () {
-                console.log("Error: failed to retrieve usage");
+            function (err) {
+                console.log("Error: " + err);
             }
-        });
+        );
     }
 
-    function getFuelEvents () {
+    function getFuelEvents() {
         if (!UserService.logged || $scope.data.logFull) {
             return;
         }
-        var query = new Parse.Query("Fueling");
-        query.equalTo("User", UserService.currentUser);
-        query.include("Car");
-        query.limit(10);
-        query.skip($scope.data.fuelEvents.length);
-        query.find({
-            success: function (results) {
+        $scope.promises.fuelEvents = UsageService.getFuelEvents(UserService.currentUser, $scope.data.fuelEvents.length).then(
+            function (results) {
                 if (results.length < 10) {
                     $scope.data.logFull = true;
                 }
-                //refineFuelEvents(results);
                 $scope.data.fuelEvents = $scope.data.fuelEvents.concat(results);
-                $scope.$digest();
             },
-            error: function () {
-                console.log("failed to retrieve fueling log");
+            function (err) {
+                console.log("Error: " + err);
             }
-        });
+        );
     }
 });

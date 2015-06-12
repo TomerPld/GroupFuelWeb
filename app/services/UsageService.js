@@ -1,33 +1,67 @@
 /**
  * Created by Tomer on 09/04/2015.
  */
-app.service('UsageService', function (){
+app.service('UsageService', function ($q){
    'use strict';
-    this.getCars = function (option) {
-        // option can be user or owner, call api accordingly.
-        console.log("getCar " + option);
-        if (option === "owned") {
-            return [
-                {'carName': 'Renault', 'carID': 5}
-            ];
-        }
-        return [
-            {'carName': 'MG', 'carID': 1},
-            {'carName': 'Toyota', 'carID': 2},
-            {'carName': 'Audi', 'carID': 3},
-            {'carName': 'Opel', 'carID': 4}
-        ];
+
+    this.getFuelEvents = function (user, skip) {
+        var defer = $q.defer();
+        var query = new Parse.Query("Fueling");
+        query.equalTo("User", user);
+        query.include("Car");
+        query.limit(10);
+        query.skip(skip);
+        query.find({
+            success: function (results) {
+                defer.resolve(results);
+            },
+            error: function (err) {
+                defer.reject(err);
+            }
+        });
+        return defer.promise;
     };
-    this.getDriversByCar = function (carID) {
-        console.log("getDriversByCar");
-        return [
-            {'driverName': 'Matan', 'driverID': 1},
-            {'driverName': 'Yaniv', 'driverID': 2},
-            {'driverName': 'Tomer', 'driverID': 3}
-        ];
+
+    this.getUsage = function (userCars) {
+        var defer = $q.defer();
+        var cars = [];
+        Object.keys(userCars).forEach(function (key) {
+            var value = userCars[key];
+            if (value.marked) {
+                var carPointer = {"__type":"Pointer","className":"Car","objectId":key};
+                cars.push(carPointer);
+            }
+        });
+        Parse.Cloud.run('getUsage', {'cars': cars}, {
+            success: function (result) {
+                var usage = [];
+                Object.keys(result).forEach(function (key){
+                    var value = result[key];
+                    value.carName = key;
+                    if (key != 'total') {
+                        value.carName = userCars[key].Make + " " + userCars[key].Model;
+                    }
+                    usage.push(value);
+                });
+                defer.resolve(usage);
+            },
+            error: function (err) {
+                defer.reject(err);
+            }
+        });
+        return defer.promise;
     };
-    this.getUsageData = function (car,driver) {
-        console.log("getUsageData, car is: " + car + ", driver is: " + driver + ".");
-        return {};
-    }
+
+    this.getCars = function () {
+        var defer = $q.defer();
+        Parse.Cloud.run('getOwnedCars', {}, {
+            success: function (results) {
+                defer.resolve(results);
+            },
+            error: function (err) {
+                defer.reject(err);
+            }
+        });
+        return defer.promise;
+    };
 });
