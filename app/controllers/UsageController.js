@@ -4,9 +4,7 @@
 app.controller('UsageController', function ($scope, $filter, UserService, UsageService, ngTableParams, Fueling, Car) {
     'use strict';
     var cleanData = {
-        "allCars": true,
         "userCars": {},
-        "numCars": 0,
         "fuelEvents": [],
         "logFull": false,
         "usage": []
@@ -15,13 +13,22 @@ app.controller('UsageController', function ($scope, $filter, UserService, UsageS
         $scope.UserService = UserService;
         $scope.doLogin = UserService.doLogin;
         $scope.data = angular.copy(cleanData);
+        $scope.datepickers = {
+            'minDate': '1900-01-01',
+            'maxDate': '2099-12-31',
+            'fromDateOpened': false,
+            'untilDateOpened': false
+        };
+        $scope.openFromDate = function () {
+            $scope.datepickers.fromDateOpened = !$scope.datepickers.fromDateOpened;
+        };
+        $scope.openUntilDate = function () {
+            $scope.datepickers.untilDateOpened = !$scope.datepickers.untilDateOpened;
+        };
+        $scope.data.untilDate = (new Date()) - 1;
 
         // Promises dictionary for loading spinner
-        $scope.promises = {
-            'usage': undefined,
-            'cars': undefined,
-            'fuelEvents': undefined
-        };
+        $scope.promises = {};
         $scope.charts = {};
         $scope.charts.fuelEvents = {
             options: {
@@ -48,7 +55,6 @@ app.controller('UsageController', function ($scope, $filter, UserService, UsageS
             },
             data: {}
         };
-
         // Initializing configuration for ngTable
         $scope.tableParams = new ngTableParams({
             page: 1,
@@ -71,8 +77,9 @@ app.controller('UsageController', function ($scope, $filter, UserService, UsageS
         };
     })();
 
+    $scope.$watch('data.fromDate', function (date) {console.log(date);});
     $scope.$watch('UserService.logged', function (logged) {
-        $scope.data = angular.copy(cleanData);
+        //$scope.data = angular.copy(cleanData);
         getCars();
         getFuelEvents();
     });
@@ -95,7 +102,7 @@ app.controller('UsageController', function ($scope, $filter, UserService, UsageS
         if (!UserService.logged) {
             return;
         }
-        $scope.promises.cars = UsageService.getCars().then(
+        UsageService.getCars().then(
             function (results) {
                 createCarsDict(results);
                 updateUsage();
@@ -119,7 +126,7 @@ app.controller('UsageController', function ($scope, $filter, UserService, UsageS
         if (!UserService.logged) {
             return;
         }
-        $scope.promises.usage = UsageService.getUsage($scope.data.userCars).then(
+        UsageService.getUsage($scope.data.userCars).then(
             function (results) {
                 $scope.data.usage = results;
                 $scope.tableParams.reload();
@@ -135,7 +142,7 @@ app.controller('UsageController', function ($scope, $filter, UserService, UsageS
         if (!UserService.logged || $scope.data.logFull) {
             return;
         }
-        $scope.promises.fuelEvents = UsageService.getFuelEvents(UserService.currentUser, $scope.data.fuelEvents.length).then(
+        UsageService.getFuelEvents(UserService.currentUser, $scope.data.fuelEvents.length).then(
             function (results) {
                 if (results.length < 10) {
                     $scope.data.logFull = true;
