@@ -2,8 +2,9 @@
  * UserService.js - Provides data regarding the current user.
  */
 
-app.service('UserService', function ($modal) {
+app.service('UserService', function ($modal, $q) {
     'use strict';
+    var self = this;
     this.logged = false;
     this.currentUser = Parse.User.current();
     if (this.currentUser) {
@@ -35,5 +36,27 @@ app.service('UserService', function ($modal) {
             // TODO - logout failed
         }
         this.logged = false;
+    };
+
+    this.doUpdate = function (userDetails) {
+        var defer = $q.defer();
+        var currentUser = this.currentUser;
+        currentUser.set("username", userDetails.userName);
+        currentUser.set("FirstName", userDetails.firstName);
+        currentUser.set("LastName", userDetails.lastName);
+        currentUser.set("email", userDetails.email);
+        currentUser.set("BirthDate", userDetails.birthDate);
+        currentUser.set("Gender", userDetails.gender === "male");
+
+        currentUser.save(null, {
+            success: function (user) {
+                defer.resolve(user);
+            },
+            error: function (user, err) {
+                currentUser = Parse.User.current();
+                defer.reject(err);
+            }
+        });
+        return defer.promise;
     };
 });
