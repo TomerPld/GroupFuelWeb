@@ -7,7 +7,9 @@ app.controller('SignupController', function ($scope, $location, UserService) {
         lastName: "",
         email: "",
         password: "",
-        repeatPassword: ""
+        repeatPassword: "",
+        gender: "",
+        birthdate:""
     };
 
     (function () {
@@ -37,8 +39,9 @@ app.controller('SignupController', function ($scope, $location, UserService) {
         newUser.set("email", details.email);
         newUser.set("FirstName", details.firstName);
         newUser.set("LastName", details.lastName);
+        newUser.set("Gender",details.gender=="true" ? true : false );
         //TODO change it - this is currently made up default values
-        newUser.set("Gender", true);
+
         newUser.set("Age", details.age || -1);
         newUser.signUp(null, {
             success: function (user) {

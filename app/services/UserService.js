@@ -46,7 +46,7 @@ app.service('UserService', function ($modal, $q) {
         currentUser.set("LastName", userDetails.lastName);
         currentUser.set("email", userDetails.email);
         currentUser.set("BirthDate", userDetails.birthDate);
-        currentUser.set("Gender", userDetails.gender === "male");
+        currentUser.set("Gender", userDetails.gender === true);
 
         currentUser.save(null, {
             success: function (user) {

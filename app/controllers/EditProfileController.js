@@ -2,6 +2,7 @@
  * Created by matansab on 5/18/2015.
  */
 app.controller('EditProfileController', function ($scope, $location, UserService) {
+    // TODO check why getUserDetails is being called twice
     'use strict';
     var CleanUserDetails = {
         userName: "",
@@ -14,8 +15,20 @@ app.controller('EditProfileController', function ($scope, $location, UserService
     (function () {
         $scope.UserService = UserService;
         $scope.userDetails = {};
+        $scope.datepickers = {
+            'minDate': '1900-01-01',
+            'maxDate': '2099-12-31',
+            'birthDateOpened': false
+        };
+        $scope.openBirthDate = function () {
+            $scope.datepickers.birthDateOpened = !$scope.datepickers.birthDateOpened;
+        };
         getUserDetails();
     })();
+
+    $scope.$watch('userDetails.birthDate', function (date) {
+        console.log(date);
+    });
 
     $scope.doUpdate = function () {
         if (!$scope.UserService.logged) {
@@ -40,7 +53,7 @@ app.controller('EditProfileController', function ($scope, $location, UserService
             $scope.userDetails.firstName = currentUser.get('FirstName');
             $scope.userDetails.lastName = currentUser.get('LastName');
             $scope.userDetails.email = currentUser.get('email');
-            $scope.userDetails.birthDate = currentUser.get('BirthDate');
+            $scope.userDetails.birthDate = new Date(currentUser.get('BirthDate')) - 1;
             $scope.userDetails.gender = currentUser.get('Gender');
         }
         else {
