@@ -1,5 +1,5 @@
 <div class="container">
-    <h1>manage cars</h1>
+    <h1>Manage Cars</h1>
 
     <div class="alert alert-danger" role="alert" ng-if="!UserService.logged">
         <h4>Attention
@@ -19,11 +19,11 @@
     <div ng-if="UserService.logged && userCars.length!=0">
         <table ng-table="tableParams" class="table table-striped table-bordered">
             <tr ng-repeat="car in $data">
-                <td data-title="'Car Number'">{{ car.CarNumber }}</td>
-                <td data-title="'Make'">{{ car.Make }}</td>
-                <td data-title="'Model'">{{ car.Model }}</td>
-                <td data-title="'Mileage'">{{ car.Mileage }}</td>
-                <td> <button class="btn-default btn" ng-click="removeCar(car)">Remove</button></td>
+                <td class="text-center" data-title="'Car Number'">{{ car.CarNumber }}</td>
+                <td class="text-center" data-title="'Make'">{{ car.Make }}</td>
+                <td class="text-center" data-title="'Model'">{{ car.Model }}</td>
+                <td class="text-center" data-title="'Mileage'">{{ car.Mileage }}</td>
+                <td class="text-center"> <button class="btn-default btn" ng-click="removeCar(car)">Remove</button></td>
             </tr>
         </table>
     </div>

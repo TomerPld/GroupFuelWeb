@@ -11,11 +11,12 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
         // Initializing configuration for ngTable
         $scope.tableParams = new ngTableParams({
             page: 1,
-            count: 10,
+            count: 15,
             sorting: {
                 make: 'asc'
             }
         }, {
+            counts: [],
             total: 0,
             getData: function ($defer, params) {
 
@@ -90,8 +91,7 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
         console.log('in add a car');
         var modalInstance = $modal.open({
             templateUrl: 'GroupFuelWeb/app/partials/addCar.html',
-            controller: 'AddCarController',
-            backdrop: 'static'
+            controller: 'AddCarController'
         });
         modalInstance.result.then(
             function (res) {
