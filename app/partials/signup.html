@@ -4,7 +4,7 @@
     </div>
     <div class="col-md-6">
         <form>
-            <fieldset>
+            <fieldset class="col-md-5">
                 <div class="form-group">
                     <div class="row">
                         <label for="user_name" class="control-label">User Name:</label>
@@ -46,19 +46,34 @@
                                ng-model="signupDetails.repeatPassword">
                     </div>
                 </div>
+            </fieldset>
+            <div class="row"/>
+            <fieldset>
                 <div class="form-group">
                     <div class="row">
-                        <label for="Gender">Gender</label>
-                        <select class="form-control" id="Gender" ui-select2 ng-model="signupDetails.gender">
-                            <option value=true>Male</option>
-                            <option value=false>Female</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="birthdate">Birthdate</label>
-                        <datepicker id="birthdate" ng-model="signupDetails.birthdate"></datepicker>
+                        <div class="col-md-3" style="padding: 0px;">
+                            <label for="gender">Gender</label>
+                            <div class="row"></div>
+                            <div id="gender" class="btn-group">
+                                <label class="btn btn-success" ng-model="signupDetails.gender" btn-radio="true"
+                                       uncheckable>Male</label>
+                                <label class="btn btn-success" ng-model="signupDetails.gender" btn-radio="false"
+                                       uncheckable>Female</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="birthdate">Birth date</label>
+                            <input type="text"
+                                   id="birthdate"
+                                   datepicker-popup="dd-MMMM-yyyy"
+                                   ng-model="signupDetails.birthDate"
+                                   is-open="datepickers.birthDateOpened"
+                                   ng-click="openBirthDate()"
+                                   max-date="datepickers.maxDate"
+                                   min-date="datepickers.minDate"
+                                   close-text="Close"
+                                   class="input-md form-control"/>
+                        </div>
                     </div>
                 </div>
             </fieldset>
