@@ -114,9 +114,9 @@ app.controller('AddCarController', function ($scope, $modalInstance) {
     }
 
     $scope.addCar = function () {
-        for(var p in x) {
-            if(x.hasOwnProperty(p)) {
-                if(x[p] === 0) {
+        for (var p in x) {
+            if (x.hasOwnProperty(p)) {
+                if (x[p] === 0) {
                     //Found it!
                 }
             }

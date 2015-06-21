@@ -37,7 +37,6 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
     function updateCars() {
         Parse.Cloud.run('getOwnedCars', {}, {
             success: function (results) {
-                //refineCars(results);
                 $scope.userCars = results;
                 // Updating the ngTable data
                 $scope.tableParams.reload();
@@ -50,6 +49,7 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
             }
         });
     }
+
     $scope.$watch('UserService.logged', updateCars);
 
     $scope.removeCar = function (car) {
