@@ -32,8 +32,7 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
     })();
 
     /*
-     * Gets user's car list from server, refine it to a simpler json using refineCars()
-     * and reloads table.
+     * Gets user's car list from server, and reloads table.
      */
     function updateCars() {
         Parse.Cloud.run('getOwnedCars', {}, {
@@ -41,9 +40,6 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
                 //refineCars(results);
                 $scope.userCars = results;
                 // Updating the ngTable data
-                for (var car in $scope.userCars) {
-                    console.log(car.carNumber);
-                }
                 $scope.tableParams.reload();
                 $scope.tableParams.total($scope.userCars.length);
                 $scope.$digest();
@@ -55,26 +51,6 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
         });
     }
     $scope.$watch('UserService.logged', updateCars);
-
-    /*
-     * Private function - gets a list of parse car objects and
-     * refines it to a bindable json.
-     */
-    function refineCars(parseCars) {
-        $scope.userCars = [];
-        for (var i = 0; i < parseCars.length; i++) {
-            var currentCar = parseCars[i];
-            var currentModel = currentCar.get('Model');
-            var newCar = {};
-            newCar.ID = currentCar.get('objectId');
-            newCar.carNumber = currentCar.get('CarNumber');
-            newCar.mileage = currentCar.get('Mileage');
-            newCar.make = currentModel.get('Make');
-            newCar.model = currentModel.get('Model');
-            $scope.userCars[i] = angular.copy(newCar);
-        }
-        $scope.numCars = $scope.userCars.length;
-    }
 
     $scope.removeCar = function (car) {
         Parse.Cloud.run('removeCar', {'carNumber': car.carNumber}, {
