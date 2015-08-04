@@ -23,7 +23,12 @@
                 <td class="text-center" data-title="'Make'">{{ car.Make }}</td>
                 <td class="text-center" data-title="'Model'">{{ car.Model }}</td>
                 <td class="text-center" data-title="'Mileage'">{{ car.Mileage }}</td>
-                <td class="text-center"> <button class="btn btn-primary btn-block" ng-click="removeCar(car)">Remove Car</button></td>
+                <td class="text-center" data-title="'Drivers'">
+                    <button class="btn btn-success btn-block" ng-click="manageCarDrivers(car)">Drivers Details</button>
+                </td>
+                <td class="text-center">
+                    <button class="btn btn-danger btn-block" ng-click="removeCar(car)">Remove Car</button>
+                </td>
             </tr>
         </table>
     </div>

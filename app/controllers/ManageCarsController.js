@@ -53,7 +53,9 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
     $scope.$watch('UserService.logged', updateCars);
 
     $scope.removeCar = function (car) {
-        Parse.Cloud.run('removeCar', {'carNumber': car.carNumber}, {
+        console.log(JSON.stringify(car));
+        console.log(car.get("CarNumber"));
+        Parse.Cloud.run('removeCar', {'carNumber': car.get("CarNumber")}, {
             success: function (results) {
                 updateCars();
             },
@@ -68,6 +70,30 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
         var modalInstance = $modal.open({
             templateUrl: 'GroupFuelWeb/app/partials/addCar.html',
             controller: 'AddCarController'
+        });
+        modalInstance.result.then(
+            function (res) {
+                // show notification
+                console.log(res);
+            },
+            function (res) {
+                console.log(res);
+                // show notification
+            }
+        );
+    };
+    $scope.manageCarDrivers = function(car) {
+        console.log('In manageCarDrivers');
+        console.log(car.get("CarNumber"));
+        var carNum = car.get("CarNumber");
+        var modalInstance = $modal.open({
+            templateUrl: 'GroupFuelWeb/app/partials/manageCarDrivers.html',
+            controller: 'ManageCarDriversController',
+            resolve: {
+                carNumber : function(){
+                    return carNum;
+                }
+            }
         });
         modalInstance.result.then(
             function (res) {
