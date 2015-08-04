@@ -7,7 +7,9 @@ app.controller('SignupController', function ($scope, $location, UserService) {
         lastName: "",
         email: "",
         password: "",
-        repeatPassword: ""
+        repeatPassword: "",
+        gender: "",
+        birthDate: ""
     };
 
     (function () {
@@ -16,7 +18,19 @@ app.controller('SignupController', function ($scope, $location, UserService) {
         if ($scope.UserService.logged) {
             $location.url('/welcome');
         }
+        $scope.datepickers = {
+            'minDate': '1900-01-01',
+            'maxDate': '2099-12-31',
+            'birthDateOpened': false
+        };
+        $scope.openBirthDate = function () {
+            $scope.datepickers.birthDateOpened = !$scope.datepickers.birthDateOpened;
+        };
     })();
+
+    $scope.$watch('userDetails.birthDate', function (date) {
+        console.log(date);
+    });
 
     // TODO - move doSignUp server call to userservice.js
     $scope.doSignUp = function () {
@@ -37,9 +51,8 @@ app.controller('SignupController', function ($scope, $location, UserService) {
         newUser.set("email", details.email);
         newUser.set("FirstName", details.firstName);
         newUser.set("LastName", details.lastName);
-        //TODO change it - this is currently made up default values
-        newUser.set("Gender", true);
-        newUser.set("Age", details.age || -1);
+        newUser.set("Gender", details.gender);
+        newUser.set("BirthDate", details.birthDate);
         newUser.signUp(null, {
             success: function (user) {
                 //TODO add notification for succesful sign up

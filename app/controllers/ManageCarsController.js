@@ -1,7 +1,7 @@
 /**
  * Created by matansab on 5/18/2015.
  */
-app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTableParams, UserService) {
+app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTableParams, UserService, Car) {
 
     'use strict';
     (function () {
@@ -11,11 +11,12 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
         // Initializing configuration for ngTable
         $scope.tableParams = new ngTableParams({
             page: 1,
-            count: 10,
+            count: 15,
             sorting: {
                 make: 'asc'
             }
         }, {
+            counts: [],
             total: 0,
             getData: function ($defer, params) {
 
@@ -31,16 +32,16 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
     })();
 
     /*
-     * Gets user's car list from server, refine it to a simpler json using refineCars()
-     * and reloads table.
+     * Gets user's car list from server, and reloads table.
      */
     function updateCars() {
         Parse.Cloud.run('getOwnedCars', {}, {
             success: function (results) {
-                refineCars(results);
+                $scope.userCars = results;
                 // Updating the ngTable data
                 $scope.tableParams.reload();
                 $scope.tableParams.total($scope.userCars.length);
+                $scope.$digest();
             },
             error: function () {
                 // TODO - add notification error
@@ -48,27 +49,8 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
             }
         });
     }
-    $scope.$watch('UserService.logged', updateCars);
 
-    /*
-     * Private function - gets a list of parse car objects and
-     * refines it to a bindable json.
-     */
-    function refineCars(parseCars) {
-        $scope.userCars = [];
-        for (var i = 0; i < parseCars.length; i++) {
-            var currentCar = parseCars[i];
-            var currentModel = currentCar.get('Model');
-            var newCar = {};
-            newCar.ID = currentCar.get('objectId');
-            newCar.carNumber = currentCar.get('CarNumber');
-            newCar.mileage = currentCar.get('Mileage');
-            newCar.make = currentModel.get('Make');
-            newCar.model = currentModel.get('Model');
-            $scope.userCars[i] = angular.copy(newCar);
-        }
-        $scope.numCars = $scope.userCars.length;
-    }
+    $scope.$watch('UserService.logged', updateCars);
 
     $scope.removeCar = function (car) {
         Parse.Cloud.run('removeCar', {'carNumber': car.carNumber}, {
@@ -84,9 +66,8 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
     $scope.addCar = function () {
         console.log('in add a car');
         var modalInstance = $modal.open({
-            templateUrl: 'web_ui/app/partials/addCar.html',
-            controller: 'AddCarController',
-            backdrop: 'static'
+            templateUrl: 'GroupFuelWeb/app/partials/addCar.html',
+            controller: 'AddCarController'
         });
         modalInstance.result.then(
             function (res) {
@@ -96,6 +77,7 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
             function (res) {
                 console.log(res);
                 // show notification
-            });
+            }
+        );
     };
 });

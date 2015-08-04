@@ -6,7 +6,7 @@
         <p>You have to be a GroupFuel user to watch this page, login or create an account</p>
 
         <p>
-            <button class="btn btn-primary" ng-click="UserService.doLogin()">Login</button>
+            <button class="btn btn-primary" ng-click="doLogin()">Login</button>
             <a href="/signup" class="btn btn-default">Create Account</a>
         </p>
     </div>
@@ -33,15 +33,19 @@
                     <ul class="list-group">
                         <!-- change later to filter instead of ng-if and show only first 10, add a button to show next 10 -->
                         <li class="list-group-item" ng-repeat="fuel in data.fuelEvents">
-                            On date {{ fuel.logDate }}, car {{ fuel.carNumber }} filled {{ fuel.amount }} liters and
-                            paid {{
-                            fuel.price }} NIS
+                            On date {{ fuel.LogDate }}, car {{ fuel.CarNumber }} filled {{ fuel.Amount }} liters and
+                            paid {{ fuel.Price }} NIS
                         </li>
                     </ul>
                     <div class="panel-footer">
-                        <button type="button" ng-click="loadMore()" class="btn btn-default btn-lg btn-block">Load
-                            More...
-                        </button>
+                        <div ng-if="!data.logFull">
+                            <button type="button" ng-click="loadMore()" class="btn btn-default btn-lg btn-block">Load
+                                More...
+                            </button>
+                        </div>
+                        <div ng-if="data.logFull">
+                            <h2>Total of {{ data.fuelEvents.length }} records found.</h2>
+                        </div>
                     </div>
                 </div>
             </div>

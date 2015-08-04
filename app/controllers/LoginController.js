@@ -7,6 +7,7 @@ app.controller('LoginController', function ($scope, $modalInstance, $location, U
     (function () {
         $scope.loginDetails = angular.copy(cleanLoginDetails);
         $scope.UserService = UserService;
+        console.log("started");
     })();
 
     $scope.doLogin = function () {
