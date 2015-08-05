@@ -1,0 +1,23 @@
+{
+  "name": "GroupFuelWeb",
+  "version": "0.0.0",
+  "homepage": "https://github.com/yanivlib/GroupFuel",
+  "authors": [
+    "TomerPld <tomerpld8@gmail.com>"
+  ],
+  "description": "Group Fuel web interface",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-material-design": "~0.3.0"
+  },
+  "resolutions": {
+    "angular": ">=1.2.0"
+  }
+}

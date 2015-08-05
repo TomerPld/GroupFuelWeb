@@ -1,10 +1,24 @@
-var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui.select2', 'nvd3']);
+var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui.select2', 'tc.chartjs', 'ngMap']);
 
 (function () {
     'use strict';
-    console.log("app started");
 
     Parse.initialize("LkuUmj7OE1C9BzsbhkpMZEgeAT1A0ZACqTUZgN2f", "SjAjaVwR56asiH2VYZuY2j44LerSTflgvNTyCnzl");
+
+    Date.prototype.monthNames = [
+        "January", "February", "March",
+        "April", "May", "June",
+        "July", "August", "September",
+        "October", "November", "December"
+    ];
+
+    Date.prototype.getMonthName = function() {
+        return this.monthNames[this.getMonth()];
+    };
+
+    Date.prototype.getShortMonthName = function () {
+        return this.getMonthName().substr(0, 3);
+    };
 
     app.factory('Fueling', function () {
         var Fueling = Parse.Object.extend("Fueling");
@@ -24,9 +38,26 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
         });
         Fueling.prototype.__defineGetter__("CarNumber", function () {
             var car = this.get("Car");
-            return car.get("CarNumber")
+            if (car === undefined) {
+                return 'unknown';
+            }
+            return car.get("CarNumber");
         });
-
+        Fueling.prototype.__defineGetter__("UserName", function () {
+            var user = this.get("User");
+            return user.get("username");
+        });
+        Fueling.prototype.__defineGetter__("GasStationLoc", function () {
+            var gsl = this.get("GasStation");
+            if (gsl === undefined) {
+                return undefined;
+            }
+            var geo = gsl.get("Location");
+            if (geo == undefined) {
+                return undefined;
+            }
+            return String(geo.latitude) + ', ' + String(geo.longitude);
+        });
         return Fueling;
     });
 
@@ -41,15 +72,27 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
         });
         Car.prototype.__defineGetter__("Make", function () {
             var model = this.get("Model");
-            return model.get("Make")
+            if (model === undefined) {
+                console.log('model is undefined');
+                return undefined;
+            }
+            return model.get("Make");
         });
         Car.prototype.__defineGetter__("Model", function () {
             var model = this.get("Model");
-            return model.get("Model")
+            if (model === undefined) {
+                console.log('model is undefined');
+                return undefined;
+            }
+            return model.get("Model");
         });
         Car.prototype.__defineGetter__("Year", function () {
             var model = this.get("Model");
-            return model.get("Year")
+            return model.get("Year");
+        });
+        Car.prototype.__defineGetter__("CarName", function () {
+            var model = this.get("Model");
+            return model.get("Make") + ' ' + model.get("Model");
         });
         return Car;
     });

@@ -26,11 +26,15 @@
 		<!-- put links to vendor css here -->
 		<link rel="stylesheet" href="GroupFuelWeb/app/bower_components/pace/themes/blue/pace-theme-mac-osx.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+		<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css"> -->
+		<link href="GroupFuelWeb/app/bower_components/bootstrap-material-design/dist/css/roboto.min.css" rel="stylesheet">
+		<link href="GroupFuelWeb/app/bower_components/bootstrap-material-design/dist/css/material.min.css" rel="stylesheet">
+		<link href="GroupFuelWeb/app/bower_components/bootstrap-material-design/dist/css/ripples.min.css" rel="stylesheet">
+
 		<link rel="stylesheet" href="GroupFuelWeb/app/bower_components/ng-table/dist/ng-table.css">
 		<link rel="stylesheet" href="GroupFuelWeb/app/bower_components/select2/select2.css">
-		<link rel="stylesheet" href="GroupFuelWeb/app/bower_components/nvd3/nv.d3.css">
-
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Serif">
+		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Droid+Sans">
 		<link rel="stylesheet" href="GroupFuelWeb/app/assets/style.css"/>
 
 	</head>
@@ -70,9 +74,11 @@
 
 		<!-- vendors scripts that we use -->
 		<script src="//www.parsecdn.com/js/parse-1.4.2.min.js"></script>
+		<script src="http://maps.google.com/maps/api/js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+		<script src="GroupFuelWeb/app/bower_components/ngmap/build/scripts/ng-map.min.js"></script>
 		<script src="GroupFuelWeb/app/bower_components/angular-route/angular-route.min.js"></script>
 		<script src="GroupFuelWeb/app/bower_components/pace/pace.js"></script>
 		<script src="GroupFuelWeb/app/bower_components/ng-table/dist/ng-table.min.js"></script>
@@ -80,9 +86,8 @@
 		<script src="GroupFuelWeb/app/bower_components/angular-ui-select2/src/select2.js"></script>
 		<script src="GroupFuelWeb/app/bower_components/angular-bootstrap/ui-bootstrap.min.js"></script>
 		<script src="GroupFuelWeb/app/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-		<script src="GroupFuelWeb/app/bower_components/d3/d3.js"></script>
-		<script src="GroupFuelWeb/app/bower_components/nvd3/nv.d3.js"></script>
-		<script src="GroupFuelWeb/app/bower_components/angular-nvd3/dist/angular-nvd3.js"></script>
+        <script src="GroupFuelWeb/app/bower_components/Chart.js/Chart.min.js"></script>
+        <script src="GroupFuelWeb/app/bower_components/tc-angular-chartjs/dist/tc-angular-chartjs.min.js"></script>
 
 
 		<!-- our scripts -->
@@ -97,7 +102,18 @@
         <script src="GroupFuelWeb/app/controllers/EditProfileController.js"></script>
         <script src="GroupFuelWeb/app/controllers/AddCarController.js"></script>
 		<script src="GroupFuelWeb/app/services/UsageService.js"></script>
-		<script src="GroupFuelWeb/app/services/UserService.js"></script>
+        <script src="GroupFuelWeb/app/services/UserService.js"></script>
+        <script src="GroupFuelWeb/app/services/ChartsService.js"></script>
+
+	    <!-- Vendor design -->
+		<script src="GroupFuelWeb/app/bower_components/bootstrap-material-design/dist/js/ripples.min.js"></script>
+		<script src="GroupFuelWeb/app/bower_components/bootstrap-material-design/dist/js/material.min.js"></script>
+		<script>
+			$(document).ready(function() {
+				// This command is used to initialize some elements and make them work properly
+				$.material.init();
+			});
+		</script>
 
 	</body>
 </html>

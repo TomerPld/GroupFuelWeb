@@ -1,53 +1,42 @@
 /**
  * Created by Tomer on 07/04/2015.
  */
-app.controller('UsageController', function ($scope, $filter, UserService, UsageService, ngTableParams, Fueling, Car) {
+app.controller('UsageController', function ($scope, $filter, $q, ChartsService, UserService, UsageService, ngTableParams, Fueling, Car) {
     'use strict';
+
+    $scope.chartConfig = {};
+    $scope.chartConfig.pieOptions =  ChartsService.pieOptions;
+    $scope.chartConfig.pieCharts = ChartsService.pieCharts;
+    $scope.chartConfig.pieChartData = [];
+    $scope.chartConfig.pieChosenChart = 'fuelPerCar';
+    $scope.chartConfig.lineOptions =  ChartsService.lineOptions;
+    $scope.chartConfig.lineCharts = ChartsService.lineCharts;
+    $scope.chartConfig.lineChartData = [];
+    $scope.chartConfig.lineChosenChart = 'fuelPerMonth';
+
+    $scope.lineChangeChart = function (chartName) {
+        $scope.chartConfig.lineChosenChart = chartName;
+    };
+
+    $scope.pieChangeChart = function (chartName) {
+        $scope.chartConfig.pieChosenChart = chartName;
+    };
+
+    $scope.hasGasStation = function (fueling) {
+        return fueling.GasStationLoc !== undefined;
+    };
     var cleanData = {
         "allCars": true,
         "userCars": {},
-        "numCars": 0,
         "fuelEvents": [],
         "logFull": false,
         "usage": []
     };
+
     (function () {
         $scope.UserService = UserService;
         $scope.doLogin = UserService.doLogin;
         $scope.data = angular.copy(cleanData);
-
-        // Promises dictionary for loading spinner
-        $scope.promises = {
-            'usage': undefined,
-            'cars': undefined,
-            'fuelEvents': undefined
-        };
-        $scope.charts = {};
-        $scope.charts.fuelEvents = {
-            options: {
-                "chart": {
-                    "type": "pieChart",
-                    "height": 500,
-                    "showLabels": true,
-                    "transitionDuration": 500,
-                    "labelThreshold": 0.01,
-                    "useInteractiveGuideline": false,
-                    "tooltipContent": function (key, y) {
-                        return key;
-                    },
-                    "title": "Fuel Event Per Car",
-                    "legend": {
-                        "margin": {
-                            "top": 5,
-                            "right": 35,
-                            "bottom": 5,
-                            "left": 0
-                        }
-                    }
-                }
-            },
-            data: {}
-        };
 
         // Initializing configuration for ngTable
         $scope.tableParams = new ngTableParams({
@@ -66,36 +55,54 @@ app.controller('UsageController', function ($scope, $filter, UserService, UsageS
         });
 
         $scope.loadMore = function () {
-            console.log("load more");
             getFuelEvents();
         };
     })();
 
+    // Initializing the controller will invoke the watch.
     $scope.$watch('UserService.logged', function (logged) {
         $scope.data = angular.copy(cleanData);
         getCars();
         getFuelEvents();
     });
 
-    $scope.$watch('data.usage', function (usage) {
-        var pieData = [];
-        for (var i = 0; i < usage.length; i++) {
-            if (usage[i].carName === 'total') {
-                continue;
-            }
-            var dataObject = {};
-            dataObject.key = usage[i].carName;
-            dataObject.y = usage[i].numOfEvents;
-            pieData.push(dataObject);
+    $scope.$watch('chartConfig.pieChosenChart', updatePieCharts);
+
+    $scope.$watch('data.fuelEvents', function (events) {
+        if ($scope.data.userCars !== []) {
+            updatelineCharts();
         }
-        $scope.charts.fuelEvents.data = pieData;
     });
+
+    $scope.$watch('data.userCars', function (cars) {
+        if ($scope.data.fuelEvents !== []) {
+            updatelineCharts();
+        }
+    });
+
+
+    function getFuelEvents() {
+        if (!UserService.logged || $scope.data.logFull) {
+            return;
+        }
+        UsageService.getFuelEvents(UserService.currentUser, $scope.data.fuelEvents.length).then(
+            function (results) {
+                if (results.length < 1000) {
+                    $scope.data.logFull = true;
+                }
+                $scope.data.fuelEvents = $scope.data.fuelEvents.concat(results);
+            },
+            function (err) {
+                console.log("Error: " + err);
+            }
+        );
+    }
 
     function getCars() {
         if (!UserService.logged) {
             return;
         }
-        $scope.promises.cars = UsageService.getCars().then(
+        UsageService.getCars().then(
             function (results) {
                 createCarsDict(results);
                 updateUsage();
@@ -119,9 +126,11 @@ app.controller('UsageController', function ($scope, $filter, UserService, UsageS
         if (!UserService.logged) {
             return;
         }
-        $scope.promises.usage = UsageService.getUsage($scope.data.userCars).then(
+        UsageService.getUsage($scope.data.userCars).then(
             function (results) {
+                console.log(JSON.stringify(results));
                 $scope.data.usage = results;
+                updatePieCharts();
                 $scope.tableParams.reload();
                 $scope.tableParams.total($scope.data.usage.length);
             },
@@ -131,20 +140,22 @@ app.controller('UsageController', function ($scope, $filter, UserService, UsageS
         );
     }
 
-    function getFuelEvents() {
-        if (!UserService.logged || $scope.data.logFull) {
+    function updatePieCharts () {
+        if ($scope.chartConfig.pieChosenChart === undefined) {
             return;
         }
-        $scope.promises.fuelEvents = UsageService.getFuelEvents(UserService.currentUser, $scope.data.fuelEvents.length).then(
-            function (results) {
-                if (results.length < 10) {
-                    $scope.data.logFull = true;
-                }
-                $scope.data.fuelEvents = $scope.data.fuelEvents.concat(results);
-            },
-            function (err) {
-                console.log("Error: " + err);
-            }
-        );
+        $scope.chartConfig.pieChartData = $scope.chartConfig.pieCharts[$scope.chartConfig.pieChosenChart]($scope.data.usage);
+    }
+
+    function updatelineCharts () {
+        if ($scope.chartConfig.lineChosenChart === undefined) {
+            return;
+        }
+        var datasets = $scope.chartConfig.lineCharts[$scope.chartConfig.lineChosenChart]($scope.data.fuelEvents, $scope.data.userCars);
+        var labels = ChartsService.lastSixMonths;
+        $scope.chartConfig.lineChartData = {
+            datasets: datasets,
+            labels: labels
+        };
     }
 });

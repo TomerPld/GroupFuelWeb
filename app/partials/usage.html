@@ -33,8 +33,9 @@
                     <ul class="list-group">
                         <!-- change later to filter instead of ng-if and show only first 10, add a button to show next 10 -->
                         <li class="list-group-item" ng-repeat="fuel in data.fuelEvents">
-                            On date {{ fuel.LogDate }}, car {{ fuel.CarNumber }} filled {{ fuel.Amount }} liters and
-                            paid {{ fuel.Price }} NIS
+                            <span class="col-md-9"> On date {{ fuel.LogDate }},{{fuel.UserName}} filled car {{ fuel.CarNumber }} with {{ fuel.Amount }} liters and
+                            paid {{ fuel.Price }} NIS</span>
+                            <span class="col-md-3"></span>
                         </li>
                     </ul>
                     <div class="panel-footer">
@@ -49,8 +50,59 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <nvd3 options="charts.fuelEvents.options" data="charts.fuelEvents.data"></nvd3>
+            <div class="col-md-6">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">Usage Charts</div>
+                    <div class="panel-body">
+                        <div class="navbar navbar-default">
+                            <div class="container-fluid">
+                                <div class="navbar-header">
+                                    <a class="navbar-brand">Pie Charts:</a>
+                                </div>
+                                <ul class="nav navbar-nav">
+                                    <li class="dropdown navbar-right">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">choose a chart <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li ng-repeat="(chart, func) in chartConfig.pieCharts"><a href="#" ng-click="pieChangeChart(chart)">{{ chart }}</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <canvas tc-chartjs-doughnut chart-options="chartConfig.pieOptions" chart-data="chartConfig.pieChartData" auto-legend></canvas>
+                    </div>
+                    <div class="panel-body">
+                        <div class="navbar navbar-default">
+                            <div class="container-fluid">
+                                <div class="navbar-header">
+                                    <a class="navbar-brand">Line Charts:</a>
+                                </div>
+                                <ul class="nav navbar-nav">
+                                    <li class="dropdown navbar-right">
+                                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">choose a chart <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li ng-repeat="(chart, func) in chartConfig.lineCharts"><a href="#" ng-click="lineChangeChart(chart)">{{ chart }}</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <canvas tc-chartjs-line chart-options="chartConfig.lineOptions" chart-data="chartConfig.lineChartData" auto-legend></canvas>
+                    </div>
+                    <div class="panel-body">
+                        <div class="navbar navbar-default">
+                            <div class="container-fluid">
+                                <div class="navbar-header">
+                                    <a class="navbar-brand">Fueling Map</a>
+                                </div>
+                            </div>
+                        </div>
+                        <map disable-double-click-zoom="true" center="Haifa, 3200003, Israel"
+                             zoom="4" draggable="true" dragging-cursor="move" tilt="45" zoom-to-include-markers="auto">
+                            <marker ng-repeat="fuel in data.fuelEvents | filter : hasGasStation" position="{{fuel.GasStationLoc}}"></marker>
+                        </map>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

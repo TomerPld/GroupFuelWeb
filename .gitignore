@@ -1,2 +1,3 @@
 vendors.txt
 .idea
+app/bower_components/*
