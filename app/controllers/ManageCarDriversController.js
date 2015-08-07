@@ -68,4 +68,19 @@ app.controller('ManageCarDriversController', function ($scope, $modalInstance, $
         $modalInstance.close();
     };
 
+    $scope.removeDriver = function (driver) {
+        console.log(JSON.stringify(driver));
+        console.log(driver.email);
+        console.log($scope.carNumber);
+        Parse.Cloud.run('removeDriver', {'carNumber': $scope.carNumber, 'email': driver.email}, {
+            success: function (results) {
+                showDrivers();
+            },
+            error: function () {
+                // TODO add notification error
+                console.log("Error: query failed in removeDriver");
+            }
+        });
+    };
+
 });

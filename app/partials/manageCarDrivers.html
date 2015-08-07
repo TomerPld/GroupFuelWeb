@@ -7,6 +7,9 @@
             <td class="text-center" data-title="'First Name'">{{ driver.FirstName }}</td>
             <td class="text-center" data-title="'Last Name'">{{ driver.LastName }}</td>
             <td class="text-center" data-title="'Email'">{{ driver.email }}</td>
+            <td class="text-center">
+                <button class="btn btn-danger btn-block" ng-click="removeDriver(driver)">Remove Driver</button>
+            </td>
         </tr>
     </table>
     <div class="modal-footer">
