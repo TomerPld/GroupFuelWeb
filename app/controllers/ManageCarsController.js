@@ -1,7 +1,7 @@
 /**
  * Created by matansab on 5/18/2015.
  */
-app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTableParams, UserService, Car) {
+app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTableParams, UserService, Car, User) {
 
     'use strict';
     (function () {

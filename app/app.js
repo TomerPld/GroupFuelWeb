@@ -1,4 +1,4 @@
-var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui.select2', 'nvd3', 'cgBusy']);
+var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui.select2', 'nvd3']);
 
 (function () {
     'use strict';
@@ -52,6 +52,21 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
             return model.get("Year")
         });
         return Car;
+    });
+
+    app.factory('User', function() {
+        var User = Parse.Object.extend("User");
+        User.prototype.__defineGetter__("FirstName", function() {
+            return this.get("FirstName");
+        });
+        User.prototype.__defineGetter__("LastName", function() {
+            return this.get("LastName");
+        });
+        User.prototype.__defineGetter__("email", function() {
+            return this.get("email");
+        });
+
+        return User;
     });
 
 // Configure routes for app
