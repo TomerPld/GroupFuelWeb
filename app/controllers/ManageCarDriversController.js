@@ -1,7 +1,7 @@
 /**
  * Created by matansab on 8/4/2015.
  */
-app.controller('ManageCarDriversController', function ($scope, $modalInstance, $filter, ngTableParams, carNumber) {
+app.controller('ManageCarDriversController', function ($scope, $modalInstance, $filter, ngTableParams, carNumber, UserService) {
     var driverEmail = "";
     (function () {
         $scope.carNumber = carNumber;
@@ -34,15 +34,22 @@ app.controller('ManageCarDriversController', function ($scope, $modalInstance, $
         console.log('in add driver');
         console.log('driver email is:' + $scope.driverEmail);
         console.log('the car # is:' + $scope.carNumber);
+
+        if($scope.driverEmail == UserService.currentUser.get('email')){
+            alert("You are the Owner, you can't add yourself as a driver");
+            return;
+        }
+
         Parse.Cloud.run('addDriver', {'carNumber': $scope.carNumber, 'email': $scope.driverEmail}, {
             success: function (results) {
                 console.log('great success');
             },
             error: function () {
-                // TODO add notification error
+                alert('This is not an email of a GroupFuel user.')
                 console.log("Error: query failed in add driver");
             }
         });
+
     };
 
     function showDrivers() {
