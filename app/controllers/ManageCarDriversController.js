@@ -43,6 +43,7 @@ app.controller('ManageCarDriversController', function ($scope, $modalInstance, $
         Parse.Cloud.run('addDriver', {'carNumber': $scope.carNumber, 'email': $scope.driverEmail}, {
             success: function (results) {
                 console.log('great success');
+                showDrivers();
             },
             error: function () {
                 alert('This is not an email of a GroupFuel user.')
