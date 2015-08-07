@@ -19,7 +19,7 @@ app.controller('ManageCarDriversController', function ($scope, $modalInstance, $
             total: 0,
             getData: function ($defer, params) {
 
-                // Binding table's data. $scope.userCars == [] at initialization,
+                // Binding table's data. $scope.carDrivers == [] at initialization,
                 // so we actually not showing anything right now.
                 var data = $scope.carDrivers;
                 var orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
@@ -43,7 +43,7 @@ app.controller('ManageCarDriversController', function ($scope, $modalInstance, $
                 console.log("Error: query failed in add driver");
             }
         });
-    }
+    };
 
     function showDrivers() {
         Parse.Cloud.run('getCarDrivers', {'carNumber': $scope.carNumber}, {
@@ -62,5 +62,10 @@ app.controller('ManageCarDriversController', function ($scope, $modalInstance, $
                 console.log("Error: failed to load user cars.")
             }
         });
-    }
+    };
+
+    $scope.close = function () {
+        $modalInstance.close();
+    };
+
 });
