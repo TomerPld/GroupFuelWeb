@@ -7,7 +7,7 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
     (function () {
         $scope.UserService = UserService;
         $scope.userCars = [];
-
+        $scope.userDriving = [];
         // Initializing configuration for ngTable
         $scope.tableParams = new ngTableParams({
             page: 1,
@@ -27,14 +27,34 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
                 $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
             }
         });
+
+        $scope.tableParams2 = new ngTableParams({
+            page: 1,
+            count: 15,
+            sorting: {
+                make: 'asc'
+            }
+        }, {
+            counts: [],
+            total: 0,
+            getData: function ($defer, params) {
+
+                // Binding table's data. $scope.userCars == [] at initialization,
+                // so we actually not showing anything right now.
+                var data = $scope.userDriving;
+                var orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
+                $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+            }
+        });
         // Import user data and update table
-        updateCars();
+        updateOwnedCars();
+        updateDrivingCars();
     })();
 
     /*
      * Gets user's car list from server, and reloads table.
      */
-    function updateCars() {
+    function updateOwnedCars() {
         Parse.Cloud.run('getOwnedCars', {}, {
             success: function (results) {
                 $scope.userCars = results;
@@ -50,14 +70,32 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
         });
     }
 
-    $scope.$watch('UserService.logged', updateCars);
+    function updateDrivingCars() {
+        Parse.Cloud.run('getDrivingCars', {}, {
+            success: function (results) {
+                $scope.userDriving = results;
+                // Updating the ngTable data
+                $scope.tableParams2.reload();
+                $scope.tableParams2.total($scope.userDriving.length);
+                $scope.$digest();
+                console.log(results);
+                console.log(JSON.stringify(results));
+            },
+            error: function () {
+                // TODO - add notification error
+                console.log("Error: failed to load user driving cars.")
+            }
+        });
+    }
+
+    $scope.$watch('UserService.logged', updateOwnedCars);
 
     $scope.removeCar = function (car) {
         console.log(JSON.stringify(car));
         console.log(car.get("CarNumber"));
         Parse.Cloud.run('removeCar', {'carNumber': car.get("CarNumber")}, {
             success: function (results) {
-                updateCars();
+                updateOwnedCars();
             },
             error: function () {
                 // TODO add notification error
@@ -82,7 +120,7 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
             }
         );
     };
-    $scope.manageCarDrivers = function(car) {
+    $scope.manageCarDrivers = function (car) {
         console.log('In manageCarDrivers');
         console.log(car.get("CarNumber"));
         var carNum = car.get("CarNumber");
@@ -90,7 +128,7 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
             templateUrl: 'GroupFuelWeb/app/partials/manageCarDrivers.html',
             controller: 'ManageCarDriversController',
             resolve: {
-                carNumber : function(){
+                carNumber: function () {
                     return carNum;
                 }
             }
