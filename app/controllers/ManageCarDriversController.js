@@ -1,7 +1,7 @@
 /**
  * Created by matansab on 8/4/2015.
  */
-app.controller('ManageCarDriversController', function ($scope, $modalInstance, $filter, ngTableParams, carNumber, UserService) {
+app.controller('ManageCarDriversController', function ($scope, $modalInstance, $filter, ngTableParams, carNumber, UserService, ManageCarsService) {
     var driverEmail = "";
     (function () {
         $scope.carNumber = carNumber;
@@ -31,64 +31,50 @@ app.controller('ManageCarDriversController', function ($scope, $modalInstance, $
     })();
 
     $scope.addDriver = function () {
-        console.log('in add driver');
-        console.log('driver email is:' + $scope.driverEmail);
-        console.log('the car # is:' + $scope.carNumber);
-
         if($scope.driverEmail == UserService.currentUser.get('email')){
             alert("You are the Owner, you can't add yourself as a driver");
             return;
         }
-
-        Parse.Cloud.run('addDriver', {'carNumber': $scope.carNumber, 'email': $scope.driverEmail}, {
-            success: function (results) {
-                console.log('great success');
+        ManageCarsService.addDriver($scope.carNumber, $scope.driverEmail).then(
+            function(results){
                 showDrivers();
             },
-            error: function () {
-                alert('This is not an email of a GroupFuel user.')
-                console.log("Error: query failed in add driver");
+            function(err){
+                console.log("Failed to add driver "+ err);
             }
-        });
-
+        );
     };
 
     function showDrivers() {
-        Parse.Cloud.run('getCarDrivers', {'carNumber': $scope.carNumber}, {
-            success: function (results) {
+        ManageCarsService.showDrivers($scope.carNumber).then(
+            function(results){
                 $scope.carDrivers = results;
                 // Updating the ngTable data
                 $scope.tableParams.reload();
                 $scope.tableParams.total($scope.carDrivers.length);
-                $scope.$digest();
                 for (var i=0; i< results.length; i++){
                     console.log(JSON.stringify(results[i]));
                 }
             },
-            error: function () {
-                // TODO - add notification error
-                console.log("Error: failed to load user cars.")
+            function(err){
+                console.log("Error: failed to load user cars.  " + err);
             }
-        });
-    };
+        );
+    }
 
     $scope.close = function () {
         $modalInstance.close();
     };
 
     $scope.removeDriver = function (driver) {
-        console.log(JSON.stringify(driver));
-        console.log(driver.email);
-        console.log($scope.carNumber);
-        Parse.Cloud.run('removeDriver', {'carNumber': $scope.carNumber, 'email': driver.email}, {
-            success: function (results) {
+        ManageCarsService.removeDriver($scope.carNumber, driver.email).then(
+            function(results){
                 showDrivers();
             },
-            error: function () {
-                // TODO add notification error
-                console.log("Error: query failed in removeDriver");
+            function (err){
+                console.log("Error: query failed in removeDriver  "+err );
             }
-        });
+        );
     };
 
 });
