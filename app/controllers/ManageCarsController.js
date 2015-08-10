@@ -1,7 +1,7 @@
 /**
  * Created by matansab on 5/18/2015.
  */
-app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTableParams, UserService, Car, User) {
+app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTableParams, UserService, ManageCarsService, Car, User) {
 
     'use strict';
     (function () {
@@ -55,54 +55,46 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
      * Gets user's car list from server, and reloads table.
      */
     function updateOwnedCars() {
-        Parse.Cloud.run('getOwnedCars', {}, {
-            success: function (results) {
+        ManageCarsService.updateOwnedCars().then(
+            function (results) {
                 $scope.userCars = results;
-                // Updating the ngTable data
                 $scope.tableParams.reload();
                 $scope.tableParams.total($scope.userCars.length);
-                $scope.$digest();
             },
-            error: function () {
-                // TODO - add notification error
-                console.log("Error: failed to load user cars.")
+            function (err) {
+                console.log("Error: failed to load user cars " + err);
             }
-        });
+        );
     }
 
     function updateDrivingCars() {
-        Parse.Cloud.run('getDrivingCars', {}, {
-            success: function (results) {
+        ManageCarsService.updateDrivingCars().then(
+            function (results) {
                 $scope.userDriving = results;
                 // Updating the ngTable data
                 $scope.tableParams2.reload();
                 $scope.tableParams2.total($scope.userDriving.length);
-                $scope.$digest();
-                console.log(results);
-                console.log(JSON.stringify(results));
             },
-            error: function () {
-                // TODO - add notification error
-                console.log("Error: failed to load user driving cars.")
-            }
+            function (err) {
+            // TODO - add notification error
+            console.log("Error: failed to load user driving cars. " + err)
         });
     }
 
     $scope.$watch('UserService.logged', updateOwnedCars);
 
     $scope.removeCar = function (car) {
-        console.log(JSON.stringify(car));
-        console.log(car.get("CarNumber"));
-        Parse.Cloud.run('removeCar', {'carNumber': car.get("CarNumber")}, {
-            success: function (results) {
+        var carNumber = car.get("CarNumber");
+        ManageCarsService.removeCar(carNumber).then(
+            function(results){
                 updateOwnedCars();
             },
-            error: function () {
-                // TODO add notification error
-                console.log("Error: query failed in removeCar");
+            function(err){
+                console.log("Error: query failed in removeCar " + err);
             }
-        });
+        );
     };
+
     $scope.addCar = function () {
         console.log('in add a car');
         var modalInstance = $modal.open({
