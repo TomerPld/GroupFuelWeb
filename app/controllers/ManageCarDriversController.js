@@ -18,9 +18,6 @@ app.controller('ManageCarDriversController', function ($scope, $modalInstance, $
             counts: [],
             total: 0,
             getData: function ($defer, params) {
-
-                // Binding table's data. $scope.carDrivers == [] at initialization,
-                // so we actually not showing anything right now.
                 var data = $scope.carDrivers;
                 var orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
                 $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
@@ -31,32 +28,31 @@ app.controller('ManageCarDriversController', function ($scope, $modalInstance, $
     })();
 
     $scope.addDriver = function () {
-        if($scope.driverEmail == UserService.currentUser.get('email')){
+        if ($scope.driverEmail == UserService.currentUser.get('email')) {
             alert("You are the Owner, you can't add yourself as a driver");
             return;
         }
         ManageCarsService.addDriver($scope.carNumber, $scope.driverEmail).then(
-            function(results){
+            function (results) {
                 showDrivers();
             },
-            function(err){
-                console.log("Failed to add driver "+ err);
+            function (err) {
+                console.log("Failed to add driver, verify that this is a valid email adress " + err);
             }
         );
     };
 
     function showDrivers() {
         ManageCarsService.showDrivers($scope.carNumber).then(
-            function(results){
+            function (results) {
                 $scope.carDrivers = results;
-                // Updating the ngTable data
                 $scope.tableParams.reload();
                 $scope.tableParams.total($scope.carDrivers.length);
-                for (var i=0; i< results.length; i++){
+                for (var i = 0; i < results.length; i++) {
                     console.log(JSON.stringify(results[i]));
                 }
             },
-            function(err){
+            function (err) {
                 console.log("Error: failed to load user cars.  " + err);
             }
         );
@@ -68,11 +64,11 @@ app.controller('ManageCarDriversController', function ($scope, $modalInstance, $
 
     $scope.removeDriver = function (driver) {
         ManageCarsService.removeDriver($scope.carNumber, driver.email).then(
-            function(results){
+            function (results) {
                 showDrivers();
             },
-            function (err){
-                console.log("Error: query failed in removeDriver  "+err );
+            function (err) {
+                console.log("Error: query failed in removeDriver  " + err);
             }
         );
     };
