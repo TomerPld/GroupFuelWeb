@@ -1,0 +1,32 @@
+<div class="modal-header>">
+    <h3 class="modal-title">Manage Car Drivers</h3>
+</div>
+<div class="modal-body">
+    <table ng-table="tableParams" class="table table-striped table-bordered">
+        <tr ng-repeat="driver in $data">
+            <td class="text-center" data-title="'First Name'">{{ driver.FirstName }}</td>
+            <td class="text-center" data-title="'Last Name'">{{ driver.LastName }}</td>
+            <td class="text-center" data-title="'Email'">{{ driver.email }}</td>
+            <td class="text-center">
+                <button class="btn btn-danger btn-block" ng-click="removeDriver(driver)">Remove Driver</button>
+            </td>
+        </tr>
+    </table>
+    <div class="modal-footer">
+        <form>
+            <fieldset>
+                <div class="form-group required center-block">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label class="control-label pull-left" for="driver_email">Driver Email</label>
+                            <input class="form-control col-md-3" required="required" id="driver_email" type="text"
+                                   ng-model="driverEmail" placeholder="e.g matan@google.com">
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+        <button class="btn btn-primary pull-left" ng-click="addDriver()">Add</button>
+        <button class="btn btn-warning pull-left" ng-click="close()">Close</button>
+    </div>
+</div>

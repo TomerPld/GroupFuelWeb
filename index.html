@@ -3,11 +3,11 @@
 <html ng-app="GroupFuel">
     <head>
 		<title>Group Fuel Web</title>
-		
+
 		<meta charset="utf-8"/>
 		<meta http-equiv="X-UA-Compatible"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-		
+
 		<!-- the base url for routing -->
 		<base href="/" />
 
@@ -23,6 +23,7 @@
 				}
 			};
 		</script>
+
 		<!-- put links to vendor css here -->
 		<link rel="stylesheet" href="GroupFuelWeb/app/bower_components/pace/themes/blue/pace-theme-mac-osx.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
@@ -34,7 +35,6 @@
 		<link rel="stylesheet" href="GroupFuelWeb/app/assets/style.css"/>
 
 	</head>
-    <body>
 		<div id="wrapper" ng-controller="NavigationController">
             <div class="container-fluid">
 			    <div class="navbar navbar-default">
@@ -96,8 +96,10 @@
         <script src="GroupFuelWeb/app/controllers/ManageCarsController.js"></script>
         <script src="GroupFuelWeb/app/controllers/EditProfileController.js"></script>
         <script src="GroupFuelWeb/app/controllers/AddCarController.js"></script>
+		<script src="GroupFuelWeb/app/controllers/ManageCarDriversController.js"></script>
 		<script src="GroupFuelWeb/app/services/UsageService.js"></script>
 		<script src="GroupFuelWeb/app/services/UserService.js"></script>
+		<script src="GroupFuelWeb/app/services/ManageCarsService.js"></script>
 
 	</body>
 </html>
