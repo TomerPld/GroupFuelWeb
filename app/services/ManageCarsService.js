@@ -97,4 +97,17 @@ app.service('ManageCarsService', function ($q) {
         return defer.promise;
     };
 
+    this.getCarModels = function (make) {
+        var defer = $q.defer();
+        Parse.Cloud.run('getCarModels', {'Make': make}, {
+            success: function (results) {
+                defer.resolve(results);
+            },
+            error: function (err) {
+                defer.reject(err);
+            }
+        });
+        return defer.promise;
+    };
+
 });

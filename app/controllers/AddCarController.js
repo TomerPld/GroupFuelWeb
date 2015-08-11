@@ -44,17 +44,15 @@ app.controller('AddCarController', function ($scope, $modalInstance, ManageCarsS
         }
         disableFollowingSelects('make', 'model');
 
-        Parse.Cloud.run('getCarModels', {'Make': make}, {
-            success: function (results) {
+        ManageCarsService.getCarModels(make).then(
+            function (results) {
                 $scope.parseModels = results.resultSet;
                 fillDictionary($scope.parseModels, $scope.modelsDic, 'Model');
-                $scope.$digest();
             },
-            error: function (message) {
-                console.log("Error: Failed to load models");
-                console.log(Parse.Error + message);
+            function (err) {
+                console.log("Error: Failed to load models   " + err);
             }
-        });
+        );
     });
     $scope.$watch('carDetails.model', function (model) {
         if (String(model) == "" || model === undefined)
