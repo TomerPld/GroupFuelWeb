@@ -81,6 +81,20 @@ app.service('ManageCarsService', function ($q) {
             }
         });
         return defer.promise;
-    }
+    };
+
+    this.getCarMakes = function () {
+        var defer = $q.defer();
+
+        Parse.Cloud.run('getCarMakes', {}, {
+            success: function (results) {
+                defer.resolve(results);
+            },
+            error: function (err) {
+                defer.reject(err);
+            }
+        });
+        return defer.promise;
+    };
 
 });

@@ -1,7 +1,7 @@
 /**
  * Created by matansab on 5/21/2015.
  */
-app.controller('AddCarController', function ($scope, $modalInstance) {
+app.controller('AddCarController', function ($scope, $modalInstance, ManageCarsService) {
     // TODO remove console logs
     'use strict';
     var carDetails = {
@@ -26,22 +26,16 @@ app.controller('AddCarController', function ($scope, $modalInstance) {
         $scope.fuelTypesDic = {};
         $scope.typesDic = {};
 
-        Parse.Cloud.run('getCarMakes', {}, {
-            success: function (results) {
-                if (results === undefined) {
-                    console.log('The query has failed');
-                    return;
-                }
+        ManageCarsService.getCarMakes().then(
+            function (results) {
                 for (var i = 0; i < results.length; i++) {
                     $scope.makes.push(results[i]);
                 }
-                $scope.$digest();
             },
-            error: function () {
-                console.log("Error: failed to Makes.");
-                console.log(Parse.Error);
+            function (err) {
+                console.log("Error: failed to retrieve Makes.   " + err);
             }
-        });
+        );
     })();
 
     $scope.$watch('carDetails.make', function (make) {
