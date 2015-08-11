@@ -2,7 +2,6 @@
  * Created by matansab on 5/21/2015.
  */
 app.controller('AddCarController', function ($scope, $modalInstance, ManageCarsService) {
-    // TODO remove console logs
     'use strict';
     var carDetails = {
         car_number: "",
@@ -12,7 +11,7 @@ app.controller('AddCarController', function ($scope, $modalInstance, ManageCarsS
         volume: "",
         year: "",
         fuelType: "",
-        type: ""
+        hybrid: ""
     };
 
     (function () {
@@ -24,7 +23,7 @@ app.controller('AddCarController', function ($scope, $modalInstance, ManageCarsS
         $scope.volumesDic = {};
         $scope.yearsDic = {};
         $scope.fuelTypesDic = {};
-        $scope.typesDic = {};
+        $scope.hybridDic = {};
 
         ManageCarsService.getCarMakes().then(
             function (results) {
@@ -81,15 +80,15 @@ app.controller('AddCarController', function ($scope, $modalInstance, ManageCarsS
     $scope.$watch('carDetails.fuelType', function (fuelType) {
         if (String(fuelType) == "" || fuelType === undefined)
             return;
-        disableFollowingSelects('fuelType', 'type');
+        disableFollowingSelects('fuelType', 'hybrid');
 
-        fillDictionary($scope.fuelTypesDic[fuelType], $scope.typesDic, 'Type');
+        fillDictionary($scope.fuelTypesDic[fuelType], $scope.hybridDic, 'Hybrid');
     });
 
-    $scope.$watch('carDetails.type', function (type) {
+    $scope.$watch('carDetails.hybrid', function (type) {
         if (String(type) == "" || type === undefined)
             return;
-        disableFollowingSelects('type', '');
+        disableFollowingSelects('hybrid', '');
     });
 
 
@@ -106,36 +105,18 @@ app.controller('AddCarController', function ($scope, $modalInstance, ManageCarsS
     }
 
     $scope.addCar = function () {
-        for (var p in x) {
-            if (x.hasOwnProperty(p)) {
-                if (x[p] === 0) {
-                    //Found it!
-                }
+        console.dir($scope.carDetails);
+        ManageCarsService.addCar($scope.carDetails).then(
+            function (results) {
+                //TODO close modal
+                console.dir(results);
+            },
+            function (err) {
+                console.log("Error: Failed to add a car   " + err);
             }
-        }
-        var type, array, model;
-        type = $scope.carDetails.type;
-        array = $scope.typesDic[type];
-        model = array[0];
-        console.log(type);
-        console.dir($scope.typesDic);
-        console.dir(array);
-        console.dir(model);
-        // TODO Validate that all fields are filled
-        /* Parse.Cloud.run('addCar', {'carDetails': $scope.carDetails, 'model': }, {
-         success: function (results) {
-         // TODO close the modal
-         console.log('Im here');
-         console.dir(results);
-         $scope.$digest();
-         },
-         error: function () {
-         console.log("Error: Failed to add a car");
-         console.log(Parse.Error);
-         }
-         });*/
-
+        );
     };
+
     $scope.clearCarsForm = function () {
         var marked = $scope.markedDic;
         for (var key in marked) {
@@ -167,9 +148,9 @@ app.controller('AddCarController', function ($scope, $modalInstance, ManageCarsS
                 $scope.markedDic['fuelType'] = false;
                 $scope.carDetails['fuelType'] = "";
                 break;
-            case 'type':
-                $scope.markedDic['type'] = false;
-                $scope.carDetails['type'] = "";
+            case 'hybrid':
+                $scope.markedDic['hybrid'] = false;
+                $scope.carDetails['hybrid'] = "";
         }
     }
 });

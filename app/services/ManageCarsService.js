@@ -110,4 +110,17 @@ app.service('ManageCarsService', function ($q) {
         return defer.promise;
     };
 
+    this.addCar = function (carDetails){
+        var defer = $q.defer();
+        Parse.Cloud.run('addCar', {'carDetails': carDetails}, {
+            success: function (results) {
+                defer.resolve(results);
+            },
+            error: function (err) {
+                defer.reject(err);
+            }
+        });
+        return defer.promise;
+    };
+
 });
