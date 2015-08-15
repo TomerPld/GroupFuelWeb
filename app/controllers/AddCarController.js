@@ -1,8 +1,7 @@
 /**
  * Created by matansab on 5/21/2015.
  */
-app.controller('AddCarController', function ($scope, $modalInstance) {
-    // TODO remove console logs
+app.controller('AddCarController', function ($scope, $modalInstance, ManageCarsService) {
     'use strict';
     var carDetails = {
         car_number: "",
@@ -12,7 +11,7 @@ app.controller('AddCarController', function ($scope, $modalInstance) {
         volume: "",
         year: "",
         fuelType: "",
-        type: ""
+        hybrid: ""
     };
 
     (function () {
@@ -24,24 +23,18 @@ app.controller('AddCarController', function ($scope, $modalInstance) {
         $scope.volumesDic = {};
         $scope.yearsDic = {};
         $scope.fuelTypesDic = {};
-        $scope.typesDic = {};
+        $scope.hybridDic = {};
 
-        Parse.Cloud.run('getCarMakes', {}, {
-            success: function (results) {
-                if (results === undefined) {
-                    console.log('The query has failed');
-                    return;
-                }
+        ManageCarsService.getCarMakes().then(
+            function (results) {
                 for (var i = 0; i < results.length; i++) {
                     $scope.makes.push(results[i]);
                 }
-                $scope.$digest();
             },
-            error: function () {
-                console.log("Error: failed to Makes.");
-                console.log(Parse.Error);
+            function (err) {
+                console.log("Error: failed to retrieve Makes.   " + err);
             }
-        });
+        );
     })();
 
     $scope.$watch('carDetails.make', function (make) {
@@ -50,17 +43,15 @@ app.controller('AddCarController', function ($scope, $modalInstance) {
         }
         disableFollowingSelects('make', 'model');
 
-        Parse.Cloud.run('getCarModels', {'Make': make}, {
-            success: function (results) {
+        ManageCarsService.getCarModels(make).then(
+            function (results) {
                 $scope.parseModels = results.resultSet;
                 fillDictionary($scope.parseModels, $scope.modelsDic, 'Model');
-                $scope.$digest();
             },
-            error: function (message) {
-                console.log("Error: Failed to load models");
-                console.log(Parse.Error + message);
+            function (err) {
+                console.log("Error: Failed to load models   " + err);
             }
-        });
+        );
     });
     $scope.$watch('carDetails.model', function (model) {
         if (String(model) == "" || model === undefined)
@@ -89,15 +80,15 @@ app.controller('AddCarController', function ($scope, $modalInstance) {
     $scope.$watch('carDetails.fuelType', function (fuelType) {
         if (String(fuelType) == "" || fuelType === undefined)
             return;
-        disableFollowingSelects('fuelType', 'type');
+        disableFollowingSelects('fuelType', 'hybrid');
 
-        fillDictionary($scope.fuelTypesDic[fuelType], $scope.typesDic, 'Type');
+        fillDictionary($scope.fuelTypesDic[fuelType], $scope.hybridDic, 'Hybrid');
     });
 
-    $scope.$watch('carDetails.type', function (type) {
+    $scope.$watch('carDetails.hybrid', function (type) {
         if (String(type) == "" || type === undefined)
             return;
-        disableFollowingSelects('type', '');
+        disableFollowingSelects('hybrid', '');
     });
 
 
@@ -114,36 +105,18 @@ app.controller('AddCarController', function ($scope, $modalInstance) {
     }
 
     $scope.addCar = function () {
-        for (var p in x) {
-            if (x.hasOwnProperty(p)) {
-                if (x[p] === 0) {
-                    //Found it!
-                }
+        console.dir($scope.carDetails);
+        ManageCarsService.addCar($scope.carDetails).then(
+            function (results) {
+                //TODO close modal
+                console.dir(results);
+            },
+            function (err) {
+                console.log("Error: Failed to add a car   " + err);
             }
-        }
-        var type, array, model;
-        type = $scope.carDetails.type;
-        array = $scope.typesDic[type];
-        model = array[0];
-        console.log(type);
-        console.dir($scope.typesDic);
-        console.dir(array);
-        console.dir(model);
-        // TODO Validate that all fields are filled
-        /* Parse.Cloud.run('addCar', {'carDetails': $scope.carDetails, 'model': }, {
-         success: function (results) {
-         // TODO close the modal
-         console.log('Im here');
-         console.dir(results);
-         $scope.$digest();
-         },
-         error: function () {
-         console.log("Error: Failed to add a car");
-         console.log(Parse.Error);
-         }
-         });*/
-
+        );
     };
+
     $scope.clearCarsForm = function () {
         var marked = $scope.markedDic;
         for (var key in marked) {
@@ -175,9 +148,9 @@ app.controller('AddCarController', function ($scope, $modalInstance) {
                 $scope.markedDic['fuelType'] = false;
                 $scope.carDetails['fuelType'] = "";
                 break;
-            case 'type':
-                $scope.markedDic['type'] = false;
-                $scope.carDetails['type'] = "";
+            case 'hybrid':
+                $scope.markedDic['hybrid'] = false;
+                $scope.carDetails['hybrid'] = "";
         }
     }
 });

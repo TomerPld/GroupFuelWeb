@@ -97,6 +97,21 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
         return Car;
     });
 
+    app.factory('User', function() {
+        var User = Parse.Object.extend("User");
+        User.prototype.__defineGetter__("FirstName", function() {
+            return this.get("FirstName");
+        });
+        User.prototype.__defineGetter__("LastName", function() {
+            return this.get("LastName");
+        });
+        User.prototype.__defineGetter__("email", function() {
+            return this.get("email");
+        });
+
+        return User;
+    });
+
 // Configure routes for app
     app.config(function ($routeProvider, $locationProvider) {
         $locationProvider.html5Mode(true);

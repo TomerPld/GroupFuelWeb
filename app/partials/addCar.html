@@ -69,13 +69,13 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-4">
-                        <label class="control-label" for="TypeSelect"> Type </label>
+                        <label class="control-label" for="HybridSelect"> hybrid </label>
                         <select ng-disabled="markedDic['fuelType'] != true" class="form-control col-md-2"
-                                id="TypeSelect"
+                                id="HybridSelect"
                                 name="type" ui-select2
-                                ng-model="carDetails.type">
-                            <option ng-if="carDetails.type !== null && carDetails.type !== undefined" value="">[SELECT]</option>
-                            <option ng-repeat="(type, value) in typesDic" value="{{ type }}">{{ type }}</option>
+                                ng-model="carDetails.hybrid">
+                            <option ng-if="carDetails.hybrid !== null && carDetails.hybrid !== undefined" value="">[SELECT]</option>
+                            <option ng-repeat="(hybrid, value) in hybridDic" value="{{ hybrid }}">{{ hybrid }}</option>
                         </select>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
 </div>
 
 <div class="modal-footer">
-    <button class="btn btn-primary" ng-click="addCar()">Add</button>
-    <button class="btn btn-default" ng-click="clearCarsForm()">Clear</button>
-    <button class="btn btn-warning" ng-click="close()">Close</button>
+    <button class="btn btn-primary pull-left" ng-click="addCar()">Add</button>
+    <button class="btn btn-default pull-left" ng-click="clearCarsForm()">Clear</button>
+    <button class="btn btn-warning pull-left" ng-click="close()">Close</button>
 </div>
