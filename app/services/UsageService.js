@@ -9,7 +9,9 @@ app.service('UsageService', function ($q){
         var query = new Parse.Query("Fueling");
         query.equalTo("User", user);
         query.include("Car");
-        query.limit(10);
+        query.include("User");
+        query.include("GasStation")
+        query.limit(1000);
         query.skip(skip);
         query.find({
             success: function (results) {

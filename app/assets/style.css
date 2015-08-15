@@ -1,3 +1,10 @@
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Droid Serif', Georgia, Times, serif;
+}
+p, div {
+    font-family: 'Droid Sans', Helvetica, Arial, sans-serif;
+}
+
 .button-wrapper {
     margin : 2px;
 }
@@ -5,4 +12,35 @@
 .form-group.required .control-label:after {
      content:"*";
      color:red;
- }
+}
+
+body {
+    background-color: rgba(40, 88, 110, 0.1);
+    /*background: url(polonez_car.png) repeat 0 0;*/
+}
+
+.jumbotron {
+    background-color: rgba(245, 255, 248, 0.88);
+}
+
+.welcome-page {
+    background-color: wheat;
+    border-radius: 10px;
+    display: inline-block;
+    margin: 3%;
+}
+.page-body {
+    height: 60%;
+}
+/* Fix chart placement inside the panel */
+canvas {
+    padding-right: 30px;
+}
+
+h1 {
+    text-shadow: 1px 1px 1px #ccc;
+}
+
+.list-group-item {
+    border-bottom: 1px solid lightsteelblue !important;
+}
