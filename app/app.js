@@ -20,6 +20,40 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
         return this.getMonthName().substr(0, 3);
     };
 
+    app.factory('CarModel', function () {
+        var CarModel = Parse.Object.extend("CarModel");
+
+        CarModel.prototype.__defineGetter__("Make", function () {
+            return this.get("Make");
+        });
+
+        CarModel.prototype.__defineGetter__("Model", function () {
+            return this.get("Model");
+        });
+
+        CarModel.prototype.__defineGetter__("Year", function () {
+            return this.get("Year");
+        });
+
+        CarModel.prototype.__defineGetter__("Volume", function () {
+            return this.get("Volume");
+        });
+
+        CarModel.prototype.__defineGetter__("Gear", function () {
+            return this.get("Gear");
+        });
+
+        CarModel.prototype.__defineGetter__("FuelType", function () {
+            return this.get("FuelType");
+        });
+
+        CarModel.prototype.__defineGetter__("Name", function () {
+            return this.get("Make") + ' ' + this.get("Model");
+        })
+
+        return CarModel;
+    });
+
     app.factory('Fueling', function () {
         var Fueling = Parse.Object.extend("Fueling");
 
@@ -67,9 +101,19 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
         Car.prototype.__defineGetter__("CarNumber", function () {
             return this.get("CarNumber");
         });
+
         Car.prototype.__defineGetter__("Mileage", function () {
             return this.get("Mileage");
         });
+
+        Car.prototype.__defineGetter__("InitialMileage", function () {
+            return this.get("InitialMileage");
+        });
+
+        Car.prototype.__defineGetter__("FuelEvents", function () {
+            return this.get("FuelEvents");
+        });
+
         Car.prototype.__defineGetter__("Make", function () {
             var model = this.get("Model");
             if (model === undefined) {
@@ -78,6 +122,7 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
             }
             return model.get("Make");
         });
+
         Car.prototype.__defineGetter__("Model", function () {
             var model = this.get("Model");
             if (model === undefined) {
@@ -86,14 +131,17 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
             }
             return model.get("Model");
         });
+
         Car.prototype.__defineGetter__("Year", function () {
             var model = this.get("Model");
             return model.get("Year");
         });
+
         Car.prototype.__defineGetter__("CarName", function () {
             var model = this.get("Model");
             return model.get("Make") + ' ' + model.get("Model");
         });
+
         return Car;
     });
 
@@ -102,14 +150,72 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
         User.prototype.__defineGetter__("FirstName", function() {
             return this.get("FirstName");
         });
+
         User.prototype.__defineGetter__("LastName", function() {
             return this.get("LastName");
         });
+
         User.prototype.__defineGetter__("email", function() {
             return this.get("email");
         });
 
         return User;
+    });
+
+    app.filter('unique', function() {
+        return function(collection, keyname) {
+            var output = [],
+                keys = [];
+
+            angular.forEach(collection, function(item) {
+                var key = item[keyname];
+                if(keys.indexOf(key) === -1) {
+                    keys.push(key);
+                    output.push(item);
+                }
+            });
+
+            return output;
+        };
+    });
+
+    app.filter('kmPerLiter', function() {
+        return function(item) {
+            if (!item.amount && !item.totalAmount) {
+                return 'No data';
+            }
+            if (item.amount) {
+                var retVal = Number(item.totalMileage / item.amount).toFixed(2);
+            }
+            else {
+                var retVal = Number((item.currentMileage - item.startingMileage) / item.totalAmount).toFixed(2);
+            }
+            return retVal;
+        };
+    });
+
+    app.filter('kmPerDollar', function() {
+        return function(item) {
+            if (!item.price && !item.totalPrice) {
+                return 'No data';
+            }
+            if (item.amount) {
+                var retVal = Number(item.totalMileage / item.price).toFixed(2);
+            }
+            else {
+                var retVal = Number((item.currentMileage - item.startingMileage) / item.totalPrice).toFixed(2);
+            }
+            return retVal;
+        };
+    });
+
+    app.filter('noData', function() {
+        return function(item) {
+            if (!item) {
+                return 'No data';
+            }
+            return item;
+        };
     });
 
 // Configure routes for app

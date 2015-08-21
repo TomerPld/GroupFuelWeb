@@ -39,6 +39,7 @@
 		<link rel="stylesheet" href="GroupFuelWeb/app/assets/style.css"/>
 
 	</head>
+	<body>
 		<div id="wrapper" ng-controller="NavigationController">
             <div class="container-fluid">
 			    <div class="navbar navbar-default">
@@ -69,6 +70,7 @@
 					</ul>
 	    		</div>
             </div>
+			</div>
 		</div>
 		<div ng-view class="container-fluid"></div>
 
@@ -106,8 +108,12 @@
         <script src="GroupFuelWeb/app/services/UserService.js"></script>
         <script src="GroupFuelWeb/app/services/ChartsService.js"></script>
 		<script src="GroupFuelWeb/app/services/ManageCarsService.js"></script>
-	    <!-- Vendor design -->
-		<script src="GroupFuelWeb/app/bower_components/bootstrap-material-design/dist/js/ripples.min.js"></script>
+		<script src="GroupFuelWeb/app/services/StatisticsService.js"></script>
+		<script src="GroupFuelWeb/app/services/ParameterService.js"></script>
+
+		<!-- Vendor design -->
+ 	    <script src="GroupFuelWeb/app/bower_components/arrive/minified/arrive.min.js"></script>
+	    <script src="GroupFuelWeb/app/bower_components/bootstrap-material-design/dist/js/ripples.min.js"></script>
 		<script src="GroupFuelWeb/app/bower_components/bootstrap-material-design/dist/js/material.min.js"></script>
 		<script>
 			$(document).ready(function() {
@@ -117,6 +123,16 @@
 		</script>
 
 
-
+		<div class="footer">
+			<div class="container footer-container">
+				<p class="footer-text">GroupFuel was created as part of <a href="http://webcourse.cs.technion.ac.il/236371/">Course 236371</a> - Project in Parallel/Distributed Programming, Given by the faculty of CS, Technion</p>
+				<a class="footer-text" href="/welcome">©GroupFuelWeb 2015 v0.1.1</a>
+				<a class="footer-text" href="https://github.com/TomerPld/GroupFuelWeb">GitHub</a>
+				<a class="footer-text" href="#">Getting Started</a>
+				<a class="footer-text" href="#">Dev Manual</a>
+				<a class="footer-text" href="#">Download Our App</a>
+				<a class="footer-text" href="https://github.com/TomerPld/GroupFuelWeb/issues">Report an Issue</a>
+			</div>
+		</div>
 	</body>
 </html>

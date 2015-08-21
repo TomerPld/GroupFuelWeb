@@ -128,7 +128,6 @@ app.controller('UsageController', function ($scope, $filter, $q, ChartsService, 
         }
         UsageService.getUsage($scope.data.userCars).then(
             function (results) {
-                console.log(JSON.stringify(results));
                 $scope.data.usage = results;
                 updatePieCharts();
                 $scope.tableParams.reload();
