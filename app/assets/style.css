@@ -44,3 +44,21 @@ h1 {
 .list-group-item {
     border-bottom: 1px solid lightsteelblue !important;
 }
+/*.form-group {
+    margin : auto !important;
+}*/
+footer {
+    background-color: #333;
+    width: 100%;
+    bottom: 0;
+    position: fixed;
+}
+.footer-text {
+    color: #008d7d;
+    margin-left: 5%;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+.footer-container {
+    padding: 2px;
+}

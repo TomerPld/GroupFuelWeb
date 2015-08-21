@@ -1,82 +1,91 @@
 <div class="container" cg-busy="userDetailsPromise">
-    <div class="alert alert-danger" role="alert" ng-if="!UserService.logged">
-        <h4>Attention
-            <small>You are not logged in</small>
-        </h4>
-        <p>In order to edit your profile you must log in first
-            <button class="btn btn-primary" ng-click="UserService.doLogin()">Login</button>
-        </p>
-        <p>Don't have an account yet? <a href="/signup" class="btn btn-default">Create Account</a></p>
+    <div class="page-header">
+        <h1></h1>
     </div>
-    <div class="col-md-7" ng-if="UserService.logged">
-        <form>
-            <fieldset class="col-md-5">
-                <div class="form-group">
-                    <div class="row">
-                        <label for="user_name" class="control-label">User Name:</label>
-                        <input class="form-control" id="user_name" type="text" ng-model="userDetails.userName"
-                               placeholder="johndoe">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="first_name">First Name:</label>
-                        <input class="form-control" id="first_name" type="text" ng-model="userDetails.firstName"
-                               placeholder="John">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="last_name">Last Name:</label>
-                        <input class="form-control" id="last_name" type="text" ng-model="userDetails.lastName"
-                               placeholder="Doe">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="email">Email:</label>
-                        <input class="form-control" id="email" type="email" ng-model="userDetails.email"
-                               placeholder="John.Doe@GroupFuel.com">
-                    </div>
-                </div>
-            </fieldset>
-            <div class="row"/>
-            <fieldset>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-3" style="padding: 0px;">
-                            <label for="gender">Gender</label>
+    <div class="alert alert-success" role="alert" ng-if="!UserService.logged">
+        <h2>Attention
+            <small>You are not logged in</small>
+        </h2>
+        <p>In order to edit your profile you must log in first
+            <button class="btn btn-info btn-raised" ng-click="UserService.doLogin()">Login</button>
+        </p>
+        <p>Don't have an account yet? <a href="/signup" class="btn btn-primary btn-raised">Create Account</a></p>
+    </div>
 
-                            <div class="row"/>
-                            <div id="gender" class="btn-group">
-                                <label class="btn btn-success" ng-model="userDetails.gender" btn-radio="true"
-                                       uncheckable>Male</label>
-                                <label class="btn btn-success" ng-model="userDetails.gender" btn-radio="false"
-                                       uncheckable>Female</label>
+    <div class="col-md-8" ng-if="UserService.logged">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">User Details</div>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="user_name" class="control-label col-md-3">User Name:</label>
+                            <div class="col-md-7">
+                                <input class="form-control" id="user_name" type="text" ng-model="userDetails.userName"
+                                       placeholder="johndoe">
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="birthdate">Birth date</label>
-                            <input type="text"
-                                   id="birthdate"
-                                   datepicker-popup="dd-MMMM-yyyy"
-                                   ng-model="userDetails.birthDate"
-                                   is-open="datepickers.birthDateOpened"
-                                   ng-click="openBirthDate()"
-                                   max-date="datepickers.maxDate"
-                                   min-date="datepickers.minDate"
-                                   close-text="Close"
-                                   class="input-md form-control"/>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="first_name">First Name:</label>
+                            <div class="col-md-7">
+                                <input class="form-control" id="first_name" type="text" ng-model="userDetails.firstName"
+                                       placeholder="John">
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="last_name">Last Name:</label>
+                            <div class="col-md-7">
+                                <input class="form-control" id="last_name" type="text" ng-model="userDetails.lastName"
+                                       placeholder="Doe">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="email">Email:</label>
+                            <div class="col-md-7">
+                                <input class="form-control" id="email" type="email" ng-model="userDetails.email"
+                                       placeholder="John.Doe@GroupFuel.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-3">Gender</label>
+                            <div class="col-md-7">
+                                <div class="radio radio-primary">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="gender-male" value=true ng-model="userDetails.gender" checked>
+                                        Male
+                                    </label>
+                                </div>
+                                <div class="radio radio-primary">
+                                    <label>
+                                        <input type="radio" name="optionsRadios" id="gender-female" value=false ng-model="userDetails.gender">
+                                        Female
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
 
-                    </div>
-                </div>
-            </fieldset>
-            <button type="submit" class="btn btn-primary" ng-click="doUpdate()">Update</button>
-        </form>
+
+                        <div class="form-group">
+                            <label class="control-label col-md-3" for="birthdate">Birth date</label>
+                            <div class="col-md-7">
+                                <input type="text"
+                                       id="birthdate"
+                                       datepicker-popup="dd-MMMM-yyyy"
+                                       ng-model="userDetails.birthDate"
+                                       is-open="datepickers.birthDateOpened"
+                                       ng-click="openBirthDate()"
+                                       max-date="datepickers.maxDate"
+                                       min-date="datepickers.minDate"
+                                       close-text="Close"
+                                       class="input-md form-control"/>
+                            </div>
+                        </div>
+                </form>
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary" ng-click="doUpdate()">Update</button>
+            </div>
+        </div>
     </div>
 </div>

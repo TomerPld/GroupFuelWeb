@@ -1,3 +1,117 @@
-<div>
-    <h1>Stats Screen</h1>
+<div class="container-fluid">
+    <div class="col-md-4">
+        <form class="form-horizontal">
+            <fieldset>
+                <legend>Choose a Selection</legend>
+                <div class="row">
+                    <div class="form-group-material-blue-grey">
+                        <div class="col-md-3">
+                            <label class="control-label" for="make">Make:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="form-control" id="make" ui-select2 ng-model="selection.make" data-placeholder="Choose a Manufacturer">
+                                <option value=""></option>
+                                <option ng-repeat="make in options.makes" value="{{ make }}">{{ make }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group-material-deep-orange">
+                        <div class="col-md-3">
+                            <label class="control-label" for="model">Model:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="form-control" id="model" ui-select2 ng-model="selection.model" data-placeholder="Choose a Model">
+                                <option value=""></option>
+                                <option ng-repeat="model in options.models | unique: 'Model'" value="{{ model.Model }}">{{ model.Model}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group-material-amber">
+                        <div class="col-md-3">
+                            <label class="control-label" for="year">Year:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="form-control" id="year" ui-select2 ng-model="selection.year" data-placeholder="Choose The Year">
+                                <option value=""></option>
+                                <option ng-repeat="year in options.years | unique: 'Year'" value="{{ year.Year }}">{{ year.Year }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group-material-indigo">
+                        <div class="col-md-3">
+                            <label class="control-label" for="volume">Volume:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="form-control" id="volume" ui-select2 ng-model="selection.volume" data-placeholder="Choose Engine Volue">
+                                <option value=""></option>
+                                <option ng-repeat="volume in options.volumes | unique: 'Volume'" value="{{ volume.Volume }}">{{ volume.Volume }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group-material-cyan">
+                        <div class="col-md-3">
+                            <label class="control-label" for="gear">Gear:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="form-control" id="gear" ui-select2 ng-model="selection.gear" data-placeholder="Choose Gear">
+                                <option value=""></option>
+                                <option ng-repeat="gear in options.gears | unique: 'Gear'" value="{{ gear.Gear }}">{{ gear.Gear }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group-material-grey">
+                        <div class="col-md-3">
+                            <label class="control-label" for="fuel">Fuel Type:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <select class="form-control" id="fuel" ui-select2 ng-model="selection.fuel" data-placeholder="Choose Fuel Type">
+                                <option value=""></option>
+                                <option ng-repeat="fuel in options.fuels | unique: 'FuelType'" value="{{ fuel.FuelType }}">{{ fuel.FuelType }}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group-material-blue-grey">
+                        <button class="btn btn-primary" type="submit" ng-click="addSelection()">Submit</button>
+                        <button class="btn btn-primary" type="submit" ng-click="clearForm()">Clear Form</button>
+                        <button class="btn btn-primary" type="submit" ng-click="clearSelection()">Clear Selection</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="col-md-8">
+        <div class="panel panel-material-lime">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Statistics
+                </div>
+            </div>
+            <div class="panel-body">
+                <table ng-table="tableParams" class="table table-striped table-bordered">
+                    <tr ng-repeat="car in $data">
+                        <td class="text-center" data-title="'Model'">{{ car.Name }}</td>
+                        <td class="text-center" data-title="'Year'">{{ car.Year }}</td>
+                        <td class="text-center" data-title="'Engine'">{{ car.Volume }}</td>
+                        <td class="text-center" data-title="'Gear'">{{ car.Gear }}</td>
+                        <td class="text-center" data-title="'Fuel Type'">{{ car.FuelType }}</td>
+                        <td class="text-center">
+                            <button class="btn btn-danger btn-block" ng-click="cancelSelection(car.id)">Remove Model</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>

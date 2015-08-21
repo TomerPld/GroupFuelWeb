@@ -20,6 +20,40 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
         return this.getMonthName().substr(0, 3);
     };
 
+    app.factory('CarModel', function () {
+        var CarModel = Parse.Object.extend("CarModel");
+
+        CarModel.prototype.__defineGetter__("Make", function () {
+            return this.get("Make");
+        });
+
+        CarModel.prototype.__defineGetter__("Model", function () {
+            return this.get("Model");
+        });
+
+        CarModel.prototype.__defineGetter__("Year", function () {
+            return this.get("Year");
+        });
+
+        CarModel.prototype.__defineGetter__("Volume", function () {
+            return this.get("Volume");
+        });
+
+        CarModel.prototype.__defineGetter__("Gear", function () {
+            return this.get("Gear");
+        });
+
+        CarModel.prototype.__defineGetter__("FuelType", function () {
+            return this.get("FuelType");
+        });
+
+        CarModel.prototype.__defineGetter__("Name", function () {
+            return this.get("Make") + ' ' + this.get("Model");
+        })
+
+        return CarModel;
+    });
+
     app.factory('Fueling', function () {
         var Fueling = Parse.Object.extend("Fueling");
 
@@ -110,6 +144,23 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
         });
 
         return User;
+    });
+
+    app.filter('unique', function() {
+        return function(collection, keyname) {
+            var output = [],
+                keys = [];
+
+            angular.forEach(collection, function(item) {
+                var key = item[keyname];
+                if(keys.indexOf(key) === -1) {
+                    keys.push(key);
+                    output.push(item);
+                }
+            });
+
+            return output;
+        };
     });
 
 // Configure routes for app
