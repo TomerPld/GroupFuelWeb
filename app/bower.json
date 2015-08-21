@@ -15,7 +15,9 @@
     "tests"
   ],
   "dependencies": {
-    "bootstrap-material-design": "~0.3.0"
+    "bootstrap-material-design": "~0.3.0",
+    "arrive": "~2.2.0",
+    "angular-ui-select": "~0.12.1"
   },
   "resolutions": {
     "angular": ">=1.2.0"

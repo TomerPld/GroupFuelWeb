@@ -2,7 +2,6 @@
  * Created by matansab on 5/18/2015.
  */
 app.controller('EditProfileController', function ($scope, $location, UserService) {
-    // TODO check why getUserDetails is being called twice
     'use strict';
     var CleanUserDetails = {
         userName: "",
@@ -10,7 +9,7 @@ app.controller('EditProfileController', function ($scope, $location, UserService
         lastName: "",
         email: "",
         birthDate: "",
-        gender: ""
+        gender: "true"
     };
     (function () {
         $scope.UserService = UserService;
@@ -26,20 +25,16 @@ app.controller('EditProfileController', function ($scope, $location, UserService
         getUserDetails();
     })();
 
-    $scope.$watch('userDetails.birthDate', function (date) {
-        console.log(date);
-    });
-
     $scope.doUpdate = function () {
         if (!$scope.UserService.logged) {
             return;
         }
-        var userDetailsPromise = UserService.doUpdate($scope.userDetails).then(
+        UserService.doUpdate($scope.userDetails).then(
             function (user) {
                 console.log("User: " + JSON.stringify(user));
             },
             function (err) {
-                console.log("Error: " + err);
+                console.log("Error: " + JSON.stringify(err));
             }
         );
     };
@@ -49,6 +44,7 @@ app.controller('EditProfileController', function ($scope, $location, UserService
     function getUserDetails() {
         if (UserService.logged) {
             var currentUser = UserService.currentUser;
+            console.log(JSON.stringify(new Date(currentUser.get("BirthDate"))));
             $scope.userDetails.userName = currentUser.get('username');
             $scope.userDetails.firstName = currentUser.get('FirstName');
             $scope.userDetails.lastName = currentUser.get('LastName');

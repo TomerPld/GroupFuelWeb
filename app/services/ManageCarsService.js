@@ -83,6 +83,7 @@ app.service('ManageCarsService', function ($q) {
         return defer.promise;
     };
 
+    //TODO - move parameter functions (get...) to ParameterService
     this.getCarMakes = function () {
         var defer = $q.defer();
 
