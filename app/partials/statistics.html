@@ -101,12 +101,17 @@
             <div class="panel-body">
                 <table ng-table="tableParams" class="table table-striped table-bordered">
                     <tr ng-repeat="car in $data">
-                        <td class="text-center" data-title="'Model'">{{ car.Name }}</td>
-                        <td class="text-center" data-title="'Year'">{{ car.Year }}</td>
-                        <td class="text-center" data-title="'Engine'">{{ car.Volume }}</td>
-                        <td class="text-center" data-title="'Gear'">{{ car.Gear }}</td>
-                        <td class="text-center" data-title="'Fuel Type'">{{ car.FuelType }}</td>
-                        <td class="text-center">
+                        <td class="text-center" data-title="'Model'">{{ car.Name | noData}}</td>
+                        <td class="text-center" data-title="'Year'">{{ car.Year | noData }}</td>
+                        <td class="text-center" data-title="'Engine'">{{ car.Volume | noData }}</td>
+                        <td class="text-center" data-title="'Gear'">{{ car.Gear | noData }}</td>
+                        <td class="text-center" data-title="'Fuel Type'">{{ car.FuelType | noData }}</td>
+                        <td class="text-center" data-title="'Num of Cars'">{{ car.numOfCars | noData }}</td>
+                        <td class="text-center" data-title="'Num of Fuelings'">{{ car.numOfEvents | noData }}</td>
+                        <td class="text-center" data-title="'Km Per Liter'">{{ car | kmPerLiter }}</td>
+                        <td class="text-center" data-title="'Km Per NIS'">{{ car | kmPerDollar | currency:"&#8362" | noData }}</td>
+
+                        <td class="text-center" data-title="'Remove Selection'">
                             <button class="btn btn-danger btn-block" ng-click="cancelSelection(car.id)">Remove Model</button>
                         </td>
                     </tr>

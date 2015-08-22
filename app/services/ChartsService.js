@@ -84,7 +84,9 @@ app.service('ChartsService', function ($q, Fueling, Car) {
     var calcKmPerLiter = function (data) {
         var kpl = [];
         for (var index in data) {
-            kpl.push(new pieDataItem((data[index].currentMileage - data[index].startingMileage)/data[index].totalAmount, data[index].carName));
+            if (data[index].totalAmount > 0) {
+                kpl.push(new pieDataItem((data[index].currentMileage - data[index].startingMileage)/data[index].totalAmount, data[index].carName));
+            }
         }
         return kpl;
     };

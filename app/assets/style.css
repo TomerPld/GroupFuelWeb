@@ -1,3 +1,33 @@
+html {
+    height: 100%;
+    box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+    box-sizing: inherit;
+}
+
+body {
+    background-color: rgba(40, 88, 110, 0.1);
+    position: relative;
+    margin: 0;
+    padding-bottom: 6rem;
+    min-height: 100%;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+}
+
+.footer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 1rem;
+    background-color: #efefef;
+    text-align: center;
+}
+
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Droid Serif', Georgia, Times, serif;
 }
@@ -12,11 +42,6 @@ p, div {
 .form-group.required .control-label:after {
      content:"*";
      color:red;
-}
-
-body {
-    background-color: rgba(40, 88, 110, 0.1);
-    /*background: url(polonez_car.png) repeat 0 0;*/
 }
 
 .jumbotron {
@@ -44,15 +69,7 @@ h1 {
 .list-group-item {
     border-bottom: 1px solid lightsteelblue !important;
 }
-/*.form-group {
-    margin : auto !important;
-}*/
-footer {
-    background-color: #333;
-    width: 100%;
-    bottom: 0;
-    position: fixed;
-}
+
 .footer-text {
     color: #008d7d;
     margin-left: 5%;

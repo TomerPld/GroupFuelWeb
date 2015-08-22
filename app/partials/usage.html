@@ -19,10 +19,9 @@
                         <table ng-table="tableParams" class="table table-striped table-bordered">
                             <tr ng-repeat="stats in $data">
                                 <td data-title="'car'">{{ stats.carName }}</td>
-                                <td data-title="'total price'">{{ stats.totalPrice }}</td>
-                                <td data-title="'total amount'">{{ stats.totalAmount }}</td>
-                                <td data-title="'starting mileage'">{{ stats.startingMileage }}</td>
-                                <td data-title="'current mileage'">{{ stats.currentMileage }}</td>
+                                <td data-title="'total price'">{{ stats | kmPerDollar | currency:"&#8362" | noData }}</td>
+                                <td data-title="'total amount'">{{ stats | kmPerLiter | noData }}</td>
+                                <td data-title="'mileage'">{{ stats.currentMileage - stats.startingMileage }}</td>
                             </tr>
                         </table>
                     </div>
@@ -34,7 +33,7 @@
                         <!-- change later to filter instead of ng-if and show only first 10, add a button to show next 10 -->
                         <li class="list-group-item" ng-repeat="fuel in data.fuelEvents">
                             <span class="col-md-9"> On date {{ fuel.LogDate }},{{fuel.UserName}} filled car {{ fuel.CarNumber }} with {{ fuel.Amount }} liters and
-                            paid {{ fuel.Price }} NIS</span>
+                            paid {{ fuel.Price | currency:"&#8362" }}</span>
                             <span class="col-md-3"></span>
                         </li>
                     </ul>

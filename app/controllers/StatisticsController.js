@@ -90,12 +90,13 @@ app.controller('StatisticsController', function ($scope, ngTableParams, $filter,
 
     $scope.addSelection = function () {
         var selection = $scope.selection;
+        var allDefined = true;
         if (!selection.make) {
             return;
         }
         for (var key in selection) {
             var options = $scope.options[key + 's'];
-            if (!selection[key] && options && key != 'make') {
+            if ((!selection[key] && options && key != 'make') || key == 'fuel' && options){
                 options.map(function (option) {
                     if ($scope.selectedCars[option.id] === undefined) {
                         $scope.selectedCars[option.id] = option;
@@ -131,6 +132,25 @@ app.controller('StatisticsController', function ($scope, ngTableParams, $filter,
         for (var key in $scope.selectedCars) {
             $scope.selectedCarsList.push($scope.selectedCars[key]);
         }
+        StatisticsService.getStats($scope.selectedCarsList.map(function(car) {return car.id;})).then(function (results) {
+            for (var index in $scope.selectedCarsList) {
+                var id = $scope.selectedCarsList[index].id;
+                if (results[id]) {
+                    $scope.selectedCarsList[index].totalMileage = results[id].totalMileage;
+                    $scope.selectedCarsList[index].numOfCars = results[id].numOfCars;
+                    $scope.selectedCarsList[index].numOfEvents = results[id].numOfEvents;
+                    $scope.selectedCarsList[index].price = results[id].price;
+                    $scope.selectedCarsList[index].amount = results[id].amount;
+                }
+                else {
+                    $scope.selectedCarsList[index].totalMileage = undefined;
+                    $scope.selectedCarsList[index].numOfEvents = undefined;
+                    $scope.selectedCarsList[index].numOfCars = undefined;
+                    $scope.selectedCarsList[index].price = undefined;
+                    $scope.selectedCarsList[index].amount = undefined;
+                }
+            }
+        });
         $scope.tableParams.reload();
         $scope.tableParams.total($scope.selectedCarsList.length);
     }
