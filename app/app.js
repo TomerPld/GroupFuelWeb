@@ -49,7 +49,7 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
 
         CarModel.prototype.__defineGetter__("Name", function () {
             return this.get("Make") + ' ' + this.get("Model");
-        })
+        });
 
         return CarModel;
     });

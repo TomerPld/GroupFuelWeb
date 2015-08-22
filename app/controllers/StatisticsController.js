@@ -4,7 +4,6 @@
 app.controller('StatisticsController', function ($scope, ngTableParams, $filter, StatisticsService, ParameterService, CarModel) {
     'use strict';
 
-
     // dictionary with entry for each selection level. each entry is a set of all avaliable values for the level.
     $scope.options = {};
     // dictionary with entry for each selection level. each entry is the selected value of the level.
@@ -98,7 +97,6 @@ app.controller('StatisticsController', function ($scope, ngTableParams, $filter,
         for (var key in selection) {
             var options = $scope.options[key + 's'];
             if ((!selection[key] && options && key != 'make') || key == 'fuel' && options){
-                allDefined = false;
                 options.map(function (option) {
                     if ($scope.selectedCars[option.id] === undefined) {
                         $scope.selectedCars[option.id] = option;
@@ -106,7 +104,6 @@ app.controller('StatisticsController', function ($scope, ngTableParams, $filter,
                 });
             }
         }
-
         refreshTable();
     };
 
@@ -135,7 +132,6 @@ app.controller('StatisticsController', function ($scope, ngTableParams, $filter,
         for (var key in $scope.selectedCars) {
             $scope.selectedCarsList.push($scope.selectedCars[key]);
         }
-        console.log($scope.selectedCarsList);
         StatisticsService.getStats($scope.selectedCarsList.map(function(car) {return car.id;})).then(function (results) {
             for (var index in $scope.selectedCarsList) {
                 var id = $scope.selectedCarsList[index].id;
@@ -154,7 +150,6 @@ app.controller('StatisticsController', function ($scope, ngTableParams, $filter,
                     $scope.selectedCarsList[index].amount = undefined;
                 }
             }
-            console.log(JSON.stringify(results));
         });
         $scope.tableParams.reload();
         $scope.tableParams.total($scope.selectedCarsList.length);

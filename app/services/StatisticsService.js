@@ -96,4 +96,3 @@ app.service('StatisticsService', function ($q, Car, Fueling) {
     }
 
 });
-
