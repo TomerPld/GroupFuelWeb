@@ -1,68 +1,74 @@
 <div class="container">
-    <div class="page-header">
-        <h1>Sign Up</h1>
-    </div>
-    <div class="col-md-6">
-        <form>
-            <fieldset class="col-md-5">
-                <div class="form-group">
-                    <div class="row">
-                        <label for="user_name" class="control-label">User Name:</label>
-                        <input class="form-control" id="user_name" type="text" ng-model="signupDetails.userName"
-                               placeholder="johndoe">
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">User Details</div>
+            </div>
+            <div class="panel-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="user_name" class="control-label col-md-3">User Name:</label>
+                        <div class="col-md-7">
+                            <input class="form-control" id="user_name" type="text" ng-model="signupDetails.userName"
+                                   placeholder="johndoe">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="first_name">First Name:</label>
-                        <input class="form-control" id="first_name" type="text" ng-model="signupDetails.firstName"
-                               placeholder="John">
+                    <div class="form-group">
+                        <label for="password" class="control-label col-md-3">Password:</label>
+                        <div class="col-md-7">
+                            <input class="form-control" id="password" type="password" ng-model="signupDetails.password">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="last_name">Last Name:</label>
-                        <input class="form-control" id="last_name" type="text" ng-model="signupDetails.lastName"
-                               placeholder="Doe">
+                    <div class="form-group">
+                        <label for="re_password" class="control-label col-md-3">Repeat Password:</label>
+                        <div class="col-md-7">
+                            <input class="form-control" id="re_password" type="password" ng-model="signupDetails.repeatPassword">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="email">Email:</label>
-                        <input class="form-control" id="email" type="email" ng-model="signupDetails.email"
-                               placeholder="John.Doe@GroupFuel.com">
+                    <hr>
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="first_name">First Name:</label>
+                        <div class="col-md-7">
+                            <input class="form-control" id="first_name" type="text" ng-model="signupDetails.firstName"
+                                   placeholder="John">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="password">Password:</label>
-                        <input class="form-control" id="password" type="password" ng-model="signupDetails.password">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="last_name">Last Name:</label>
+                        <div class="col-md-7">
+                            <input class="form-control" id="last_name" type="text" ng-model="signupDetails.lastName"
+                                   placeholder="Doe">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="row">
-                        <label for="repeat_password">Repeat Password:</label>
-                        <input class="form-control" id="repeat_password" type="password"
-                               ng-model="signupDetails.repeatPassword">
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="email">Email:</label>
+                        <div class="col-md-7">
+                            <input class="form-control" id="email" type="email" ng-model="signupDetails.email"
+                                   placeholder="John.Doe@GroupFuel.com">
+                        </div>
                     </div>
-                </div>
-            </fieldset>
-            <div class="row"/>
-            <fieldset>
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col-md-3" style="padding: 0px;">
-                            <label for="gender">Gender</label>
-                            <div class="row"></div>
-                            <div id="gender" class="btn-group">
-                                <label class="btn btn-success" ng-model="signupDetails.gender" btn-radio="true"
-                                       uncheckable>Male</label>
-                                <label class="btn btn-success" ng-model="signupDetails.gender" btn-radio="false"
-                                       uncheckable>Female</label>
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Gender</label>
+                        <div class="col-md-7">
+                            <div class="radio radio-primary">
+                                <label>
+                                    <input type="radio" name="optionsRadios" id="gender-male" value=true ng-model="signupDetails.gender" checked>
+                                    Male
+                                </label>
+                            </div>
+                            <div class="radio radio-primary">
+                                <label>
+                                    <input type="radio" name="optionsRadios" id="gender-female" value=false ng-model="signupDetails.gender">
+                                    Female
+                                </label>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="birthdate">Birth date</label>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3" for="birthdate">Birth date</label>
+                        <div class="col-md-7">
                             <input type="text"
                                    id="birthdate"
                                    datepicker-popup="dd-MMMM-yyyy"
@@ -75,9 +81,11 @@
                                    class="input-md form-control"/>
                         </div>
                     </div>
-                </div>
-            </fieldset>
-            <button type="submit" class="btn btn-primary" ng-click="doSignUp()">Sign Up!</button>
-        </form>
+                </form>
+            </div>
+            <div class="panel-footer">
+                <button type="submit" class="btn btn-primary" ng-click="doSignUp()">Sign Up!</button>
+            </div>
+        </div>
     </div>
 </div>

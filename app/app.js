@@ -230,11 +230,8 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
         }).when('/statistics', {
             controller: 'StatisticsController',
             templateUrl: 'GroupFuelWeb/app/partials/statistics.html'
-        }).when('/mail-report', {
-            controller: 'MailReportController',
-            templateUrl: 'GroupFuelWeb/app/partials/mailreport.html'
         }).when('/about', {
-            controller: 'UsageController',
+            controller: 'NavigationController',
             templateUrl: 'GroupFuelWeb/app/partials/about.html'
         }).when('/signup', {
             controller: 'SignupController',

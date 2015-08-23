@@ -24,7 +24,8 @@
     "ngmap": "~1.11.5",
     "ng-table": "~0.8.3",
     "angular-route": "~1.4.4",
-    "angular-bootstrap": "~0.13.3"
+    "angular-bootstrap": "~0.13.3",
+    "angular-ui-select2": "~0.0.5"
   },
   "resolutions": {
     "angular": ">=1.2.0"

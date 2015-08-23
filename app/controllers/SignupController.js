@@ -28,10 +28,6 @@ app.controller('SignupController', function ($scope, $location, UserService) {
         };
     })();
 
-    $scope.$watch('userDetails.birthDate', function (date) {
-        console.log(date);
-    });
-
     // TODO - move doSignUp server call to userservice.js
     $scope.doSignUp = function () {
         var details = $scope.signupDetails;
@@ -51,7 +47,7 @@ app.controller('SignupController', function ($scope, $location, UserService) {
         newUser.set("email", details.email);
         newUser.set("FirstName", details.firstName);
         newUser.set("LastName", details.lastName);
-        newUser.set("Gender", details.gender);
+        newUser.set("Gender", details.gender === "true");
         newUser.set("BirthDate", details.birthDate);
         newUser.signUp(null, {
             success: function (user) {
