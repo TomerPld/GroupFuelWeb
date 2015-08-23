@@ -223,28 +223,25 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
         $locationProvider.html5Mode(true);
         $routeProvider.when('/welcome', {
             controller: 'NavigationController',
-            templateUrl: 'GroupFuelWeb/app/partials/welcome.html'
+            templateUrl: './partials/welcome.html'
         }).when('/usage', {
             controller: 'UsageController',
-            templateUrl: 'GroupFuelWeb/app/partials/usage.html'
+            templateUrl: './partials/usage.html'
         }).when('/statistics', {
             controller: 'StatisticsController',
-            templateUrl: 'GroupFuelWeb/app/partials/statistics.html'
-        }).when('/mail-report', {
-            controller: 'MailReportController',
-            templateUrl: 'GroupFuelWeb/app/partials/mailreport.html'
+            templateUrl: './partials/statistics.html'
         }).when('/about', {
             controller: 'UsageController',
-            templateUrl: 'GroupFuelWeb/app/partials/about.html'
+            templateUrl: './partials/about.html'
         }).when('/signup', {
             controller: 'SignupController',
-            templateUrl: 'GroupFuelWeb/app/partials/signup.html'
+            templateUrl: './partials/signup.html'
         }).when('/manage-cars', {
             controller: 'ManageCarsController',
-            templateUrl: 'GroupFuelWeb/app/partials/managecars.html'
+            templateUrl: './partials/managecars.html'
         }).when('/edit-profile', {
             controller: 'EditProfileController',
-            templateUrl: 'GroupFuelWeb/app/partials/editprofile.html'
+            templateUrl: './partials/editprofile.html'
         }).otherwise({redirectTo: '/welcome'});
     });
 
