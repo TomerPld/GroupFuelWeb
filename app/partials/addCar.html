@@ -1,97 +1,149 @@
-<div class="modal-header>">
-    <h3 class="modal-title">Add a Car</h3>
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div class="col-md-14">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Add A Car</div>
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <fieldset>
+                    <div class="row">
+                        <div class="form-group-material-blue-grey">
+                            <div class="col-md-3">
+                                <label class="control-label" for="make">Make:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="make" ui-select2 ng-model="selection.make"
+                                        data-placeholder="Choose a Manufacturer">
+                                    <option value=""></option>
+                                    <option ng-repeat="make in options.makes" value="{{ make }}">{{ make }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-deep-orange">
+                            <div class="col-md-3">
+                                <label class="control-label" for="model">Model:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="model" ui-select2 ng-model="selection.model"
+                                        data-placeholder="Choose a Model">
+                                    <option value=""></option>
+                                    <option ng-repeat="model in options.models | unique: 'Model'"
+                                            value="{{ model.Model }}">
+                                        {{ model.Model}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-amber">
+                            <div class="col-md-3">
+                                <label class="control-label" for="year">Year:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="year" ui-select2 ng-model="selection.year"
+                                        data-placeholder="Choose The Year">
+                                    <option value=""></option>
+                                    <option ng-repeat="year in options.years | unique: 'Year'" value="{{ year.Year }}">
+                                        {{
+                                        year.Year }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-indigo">
+                            <div class="col-md-3">
+                                <label class="control-label" for="volume">Volume:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="volume" ui-select2 ng-model="selection.volume"
+                                        data-placeholder="Choose Engine Volue">
+                                    <option value=""></option>
+                                    <option ng-repeat="volume in options.volumes | unique: 'Volume'"
+                                            value="{{ volume.Volume }}">{{ volume.Volume }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-cyan">
+                            <div class="col-md-3">
+                                <label class="control-label" for="gear">Gear:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="gear" ui-select2 ng-model="selection.gear"
+                                        data-placeholder="Choose Gear">
+                                    <option value=""></option>
+                                    <option ng-repeat="gear in options.gears | unique: 'Gear'" value="{{ gear.Gear }}">
+                                        {{
+                                        gear.Gear }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-grey">
+                            <div class="col-md-3">
+                                <label class="control-label" for="fuel">Fuel Type:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="fuel" ui-select2 ng-model="selection.fuel"
+                                        data-placeholder="Choose Fuel Type">
+                                    <option value=""></option>
+                                    <option ng-repeat="fuel in options.fuels | unique: 'FuelType'"
+                                            value="{{ fuel.FuelType }}">{{ fuel.FuelType }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-indigo">
+                            <div class="col-md-3">
+                                <label class="control-label" for="car_number">Car Number:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control" id="car_number" type="text" ng-model="selection.carNumber"
+                                       placeholder="1122233">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-cyan">
+                            <div class="col-md-3">
+                                <label class="control-label" for="mileage">Mileage:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control" id="mileage" type="text" ng-model="selection.mileage"
+                                       placeholder="123000">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-blue-grey">
+                            <button class="btn btn-primary pull=left" type="submit" ng-click="addCar()">Add Car
+                            </button>
+                            <button class="btn btn-primary pull=left" type="submit" ng-click="clearForm()">Clear Form
+                            </button>
+                            <button class="btn btn-primary pull=left" type="submit" ng-click="close()">Close
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
 </div>
-<div class="modal-body">
-    <form>
-        <fieldset>
-            <div class="form-group required center-block">
-                <div class="row">
-                    <div class="col-md-4">
-                        <label class="control-label" for="car_number">Car Number </label>
-                        <input class="form-control col-md-3" required="required" id="car_number" type="text"
-                               ng-model="carDetails.car_number" placeholder="e.g 11122233">
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <label class="control-label" for="MakeSelect">Make </label>
-                        <select class="form-control col-md-2" id="MakeSelect" name="make" ui-select2
-                                ng-model="carDetails.make">
-                            <option ng-if="!carDetails.make" value="">[SELECT]</option>
-                            <option ng-repeat="make in makes" value="{{ make }}">{{ make}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <label class="control-label" for="ModelSelect">Model </label>
-                        <select ng-disabled="markedDic['make']!=true" class="form-control col-md-2" id="ModelSelect"
-                                name="model" ui-select2
-                                ng-model="carDetails.model">
-                            <option ng-if="carDetails.model !== null && carDetails.model !== undefined" value="">[SELECT]</option>
-                            <option ng-repeat="(model, value) in modelsDic" value="{{ model }}">{{ model}}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <label class="control-label" for="VolumeSelect">Engine </label>
-                        <select ng-disabled="markedDic['model'] != true" class="form-control col-md-2" id="VolumeSelect"
-                                name="volume" ui-select2
-                                ng-model="carDetails.volume">
-                            <option ng-if="carDetails.volume !== null && carDetails.volume !== undefined" value="">[SELECT]</option>
-                            <option ng-repeat="(volume, value) in volumesDic" value="{{ volume }}">{{ volume }}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <label class="control-label" for="YearSelect">Year </label>
-                        <select ng-disabled="markedDic['volume'] != true" class="form-control col-lg-4" id="YearSelect"
-                                name="year" ui-select2
-                                ng-model="carDetails.year">
-                            <option ng-if="carDetails.year !== null && carDetails.year !== undefined" value="">[SELECT]</option>
-                            <option ng-repeat="(year, value) in yearsDic" value="{{ year }}">{{ year }}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <label class="control-label" for="FuelTypeSelect">Fuel Type </label>
-                        <select ng-disabled="markedDic['year'] != true" class="form-control col-md-2"
-                                id="FuelTypeSelect"
-                                name="fuelType" ui-select2
-                                ng-model="carDetails.fuelType">
-                            <option ng-if="carDetails.fuelType !== null && carDetails.fuelType !== undefined" value="">[SELECT]</option>
-                            <option ng-repeat="(fuelType, value) in fuelTypesDic" value="{{ fuelType }}">{{ fuelType }}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <label class="control-label" for="HybridSelect"> hybrid </label>
-                        <select ng-disabled="markedDic['fuelType'] != true" class="form-control col-md-2"
-                                id="HybridSelect"
-                                name="type" ui-select2
-                                ng-model="carDetails.hybrid">
-                            <option ng-if="carDetails.hybrid !== null && carDetails.hybrid !== undefined" value="">[SELECT]</option>
-                            <option ng-repeat="(hybrid, value) in hybridDic" value="{{ hybrid }}">{{ hybrid }}</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-4">
-                        <label for="mileage">Mileage</label>
-                        <input class="form-control col-md-2" id="mileage" type="number" ng-model="carDetails.mileage">
-                    </div>
-                </div>
-            </div>
-        </fieldset>
-    </form>
-</div>
-
-<div class="modal-footer">
-    <button class="btn btn-primary pull-left" ng-click="addCar()">Add</button>
-    <button class="btn btn-default pull-left" ng-click="clearCarsForm()">Clear</button>
-    <button class="btn btn-warning pull-left" ng-click="close()">Close</button>
-</div>
+</body>
+</html>

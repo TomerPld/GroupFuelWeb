@@ -1,156 +1,142 @@
 /**
- * Created by matansab on 5/21/2015.
+ * Created by matansab on 8/21/2015.
  */
-app.controller('AddCarController', function ($scope, $modalInstance, ManageCarsService) {
+
+app.controller('AddCarController', function ($scope, ngTableParams, $filter, StatisticsService, ParameterService, CarModel, ManageCarsService, $modalInstance) {
     'use strict';
-    var carDetails = {
-        car_number: "",
-        mileage: "",
-        make: "",
-        model: "",
-        volume: "",
-        year: "",
-        fuelType: "",
-        hybrid: ""
-    };
 
-    (function () {
-        $scope.carDetails = angular.copy(carDetails);
-        $scope.makes = [];
-        $scope.parseModels = [];
-        $scope.markedDic = {};
-        $scope.modelsDic = {};
-        $scope.volumesDic = {};
-        $scope.yearsDic = {};
-        $scope.fuelTypesDic = {};
-        $scope.hybridDic = {};
+    // dictionary with entry for each selection level. each entry is a set of all avaliable values for the level.
+    $scope.options = {};
+    // dictionary with entry for each selection level. each entry is the selected value of the level.
+    $scope.selection = {};
+    // dictionary of selected cars - cars that we'll show statistics for.
+    $scope.selectedCars = {};
+    $scope.selectedCarsList = [];
 
-        ManageCarsService.getCarMakes().then(
-            function (results) {
-                for (var i = 0; i < results.length; i++) {
-                    $scope.makes.push(results[i]);
-                }
-            },
-            function (err) {
-                console.log("Error: failed to retrieve Makes.   " + err);
-            }
-        );
-    })();
+    // setting
+    $scope.tableParams = new ngTableParams({
+        page: 1,
+        count: 15,
+        sorting: {
+            make: 'asc',
+            model: 'asc',
+            year: 'asc'
+        }
+    }, {
+        counts: [],
+        total: 0,
+        getData: function ($defer, params) {
+            var data = $scope.selectedCarsList;
+            var orderedData = params.sorting() ? $filter('orderBy')(data, params.orderBy()) : data;
+            $defer.resolve(orderedData.slice((params.page() - 1) * params.count(), params.page() * params.count()));
+        }
+    });
 
-    $scope.$watch('carDetails.make', function (make) {
-        if (String(make) == "") {
+    ParameterService.getDistinctFieldFromDB('Make', 'CarModel').then(function (result) {
+        $scope.options.makes = result;
+        console.log('recieved ' + result.length + ' makes');
+    }, function (err) {
+        console.log(err);
+    });
+
+
+    $scope.$watch('selection.make', function (make) {
+        if (!make) {
+            $scope.options.models = undefined;
             return;
         }
-        disableFollowingSelects('make', 'model');
-
-        ManageCarsService.getCarModels(make).then(
-            function (results) {
-                $scope.parseModels = results.resultSet;
-                fillDictionary($scope.parseModels, $scope.modelsDic, 'Model');
-            },
-            function (err) {
-                console.log("Error: Failed to load models   " + err);
-            }
-        );
+        // Init fields after make.
+        $scope.selection.model = undefined;
+        // Re-Populate next field valus.
+        ParameterService.getCarModels(make).then(function (result) {
+            $scope.options.models = result.resultSet;
+        });
     });
-    $scope.$watch('carDetails.model', function (model) {
-        if (String(model) == "" || model === undefined)
+
+    $scope.$watch('selection.model', function (model) {
+        $scope.selection.year = undefined;
+        if (!model) {
+            $scope.options.years = undefined;
             return;
-        disableFollowingSelects('model', 'volume');
-
-        fillDictionary($scope.modelsDic[model], $scope.volumesDic, 'Volume');
-    });
-
-    $scope.$watch('carDetails.volume', function (volume) {
-        if (String(volume) == "" || volume === undefined)
-            return;
-        disableFollowingSelects('volume', 'year');
-
-        fillDictionary($scope.volumesDic[volume], $scope.yearsDic, 'Year');
-    });
-
-    $scope.$watch('carDetails.year', function (year) {
-        if (String(year) == "" || year === undefined)
-            return;
-        disableFollowingSelects('year', 'fuelType');
-
-        fillDictionary($scope.yearsDic[year], $scope.fuelTypesDic, 'FuelType');
-    });
-
-    $scope.$watch('carDetails.fuelType', function (fuelType) {
-        if (String(fuelType) == "" || fuelType === undefined)
-            return;
-        disableFollowingSelects('fuelType', 'hybrid');
-
-        fillDictionary($scope.fuelTypesDic[fuelType], $scope.hybridDic, 'Hybrid');
-    });
-
-    $scope.$watch('carDetails.hybrid', function (type) {
-        if (String(type) == "" || type === undefined)
-            return;
-        disableFollowingSelects('hybrid', '');
-    });
-
-
-    function fillDictionary(fromArray, toDic, parseKey) {
-        // toDic = {};
-        for (var i = 0; i < fromArray.length; i++) {
-            var current = fromArray[i].get(parseKey);
-            if (toDic[current] === undefined) {
-                toDic[current] = [];
-            }
-            toDic[current].push(fromArray[i]);
         }
-        console.dir(toDic);
-    }
+        $scope.options.years = $scope.options.models.filter(function (item) {
+            return item.Model == model;
+        });
+    });
+
+    $scope.$watch('selection.year', function (year) {
+        $scope.selection.volume = undefined;
+        if (!year) {
+            $scope.options.volumes = undefined;
+            return;
+        }
+        $scope.options.volumes = $scope.options.years.filter(function (item) {
+            return item.Year == year;
+        });
+    });
+
+    $scope.$watch('selection.volume', function (volume) {
+        $scope.selection.gear = undefined;
+        if (!volume) {
+            $scope.options.gears = undefined;
+            return;
+        }
+        $scope.options.gears = $scope.options.volumes.filter(function (item) {
+            return item.Volume == volume;
+        });
+    });
+
+    $scope.$watch('selection.gear', function (gear) {
+        $scope.selection.fuel = undefined;
+        if (!gear) {
+            $scope.options.fuels = undefined;
+            return;
+        }
+        $scope.options.fuels = $scope.options.gears.filter(function (item) {
+            return item.Gear == gear;
+        });
+    });
 
     $scope.addCar = function () {
-        console.dir($scope.carDetails);
-        ManageCarsService.addCar($scope.carDetails).then(
+        //TODO check that all fields exists
+        var carDetails= {};
+        var selection = $scope.selection;
+        selection.fuelType = selection.fuel;
+
+        ManageCarsService.addCar(selection).then(
             function (results) {
-                //TODO close modal
+                $scope.close();
                 console.dir(results);
             },
             function (err) {
-                console.log("Error: Failed to add a car   " + err);
+                console.log("Error: Failed to add a car   " + JSON.stringify(err));
             }
         );
+
+
     };
 
-    $scope.clearCarsForm = function () {
-        var marked = $scope.markedDic;
-        for (var key in marked) {
-            if (marked.hasOwnProperty(key)) {
-                marked[key] = false;
-            }
-        }
-        $scope.carDetails = angular.copy(carDetails);
-    };
+
     $scope.close = function () {
         $modalInstance.close();
     };
 
+    $scope.clearForm = function () {
+        $scope.selection.make = undefined;
+    };
 
-    function disableFollowingSelects(current, next) {
-        $scope.markedDic[current] = true;
-        //noinspection FallThroughInSwitchStatementJS
-        switch (next) {
-            case 'model':
-                $scope.markedDic['model'] = false;
-                $scope.carDetails['model'] = "";
-            case 'volume':
-                $scope.markedDic['volume'] = false;
-                $scope.carDetails['volume'] = "";
-            case 'year':
-                $scope.markedDic['year'] = false;
-                $scope.carDetails['year'] = "";
-            case 'fuelType':
-                $scope.markedDic['fuelType'] = false;
-                $scope.carDetails['fuelType'] = "";
-                break;
-            case 'hybrid':
-                $scope.markedDic['hybrid'] = false;
-                $scope.carDetails['hybrid'] = "";
+    $scope.clearSelection = function () {
+        $scope.selectedCars = {};
+        refreshTable();
+        $scope.tableParams.$params.page = 1;
+    };
+
+    function refreshTable() {
+        $scope.selectedCarsList = [];
+        for (var key in $scope.selectedCars) {
+            $scope.selectedCarsList.push($scope.selectedCars[key]);
         }
+        $scope.tableParams.reload();
+        $scope.tableParams.total($scope.selectedCarsList.length);
     }
 });

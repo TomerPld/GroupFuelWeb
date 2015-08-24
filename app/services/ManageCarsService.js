@@ -112,6 +112,7 @@ app.service('ManageCarsService', function ($q) {
     };
 
     this.addCar = function (carDetails){
+        console.log(JSON.stringify(carDetails));
         var defer = $q.defer();
         Parse.Cloud.run('addCar', {'carDetails': carDetails}, {
             success: function (results) {
