@@ -89,14 +89,16 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
 
     $scope.addCar = function () {
         var modalInstance = $modal.open({
-            templateUrl: 'GroupFuelWeb/app/partials/addCarNew.html',
-            controller: 'AddCarControllerNew'
+            templateUrl: 'GroupFuelWeb/app/partials/addCar.html',
+            controller: 'AddCarController'
         });
         modalInstance.result.then(
             function (res) {
+                updateOwnedCars();
                 // show notification
             },
             function (res) {
+                updateOwnedCars();
                 // show notification
             }
         );
