@@ -89,8 +89,8 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
 
     $scope.addCar = function () {
         var modalInstance = $modal.open({
-            templateUrl: 'GroupFuelWeb/app/partials/addCar.html',
-            controller: 'AddCarController'
+            templateUrl: 'GroupFuelWeb/app/partials/addCarNew.html',
+            controller: 'AddCarControllerNew'
         });
         modalInstance.result.then(
             function (res) {

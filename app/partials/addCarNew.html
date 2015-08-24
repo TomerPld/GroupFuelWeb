@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<div class="col-md-14">
+    <div class="panel panel-primary">
+        <div class="panel-heading">Add A Car</div>
+        <div class="panel-body">
+            <form class="form-horizontal">
+                <fieldset>
+                    <div class="row">
+                        <div class="form-group-material-blue-grey">
+                            <div class="col-md-3">
+                                <label class="control-label" for="make">Make:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="make" ui-select2 ng-model="selection.make"
+                                        data-placeholder="Choose a Manufacturer">
+                                    <option value=""></option>
+                                    <option ng-repeat="make in options.makes" value="{{ make }}">{{ make }}</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-deep-orange">
+                            <div class="col-md-3">
+                                <label class="control-label" for="model">Model:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="model" ui-select2 ng-model="selection.model"
+                                        data-placeholder="Choose a Model">
+                                    <option value=""></option>
+                                    <option ng-repeat="model in options.models | unique: 'Model'"
+                                            value="{{ model.Model }}">
+                                        {{ model.Model}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-amber">
+                            <div class="col-md-3">
+                                <label class="control-label" for="year">Year:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="year" ui-select2 ng-model="selection.year"
+                                        data-placeholder="Choose The Year">
+                                    <option value=""></option>
+                                    <option ng-repeat="year in options.years | unique: 'Year'" value="{{ year.Year }}">
+                                        {{
+                                        year.Year }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-indigo">
+                            <div class="col-md-3">
+                                <label class="control-label" for="volume">Volume:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="volume" ui-select2 ng-model="selection.volume"
+                                        data-placeholder="Choose Engine Volue">
+                                    <option value=""></option>
+                                    <option ng-repeat="volume in options.volumes | unique: 'Volume'"
+                                            value="{{ volume.Volume }}">{{ volume.Volume }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-cyan">
+                            <div class="col-md-3">
+                                <label class="control-label" for="gear">Gear:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="gear" ui-select2 ng-model="selection.gear"
+                                        data-placeholder="Choose Gear">
+                                    <option value=""></option>
+                                    <option ng-repeat="gear in options.gears | unique: 'Gear'" value="{{ gear.Gear }}">
+                                        {{
+                                        gear.Gear }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-grey">
+                            <div class="col-md-3">
+                                <label class="control-label" for="fuel">Fuel Type:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <select class="form-control" id="fuel" ui-select2 ng-model="selection.fuel"
+                                        data-placeholder="Choose Fuel Type">
+                                    <option value=""></option>
+                                    <option ng-repeat="fuel in options.fuels | unique: 'FuelType'"
+                                            value="{{ fuel.FuelType }}">{{ fuel.FuelType }}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-indigo">
+                            <div class="col-md-3">
+                                <label class="control-label" for="car_number">Car Number:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control" id="car_number" type="text" ng-model="selection.carNumber"
+                                       placeholder="1122233">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group-material-cyan">
+                            <div class="col-md-3">
+                                <label class="control-label" for="mileage">Mileage:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <input class="form-control" id="mileage" type="text" ng-model="selection.mileage"
+                                       placeholder="123000">
+                            </div>
+                        </div>
+                    </div>
+        <div class="row">
+            <div class="form-group-material-blue-grey">
+                <button class="btn btn-primary pull=left" type="submit" ng-click="addCar()">Add Car
+                </button>
+                <button class="btn btn-primary pull=left" type="submit" ng-click="clearForm()">Clear Form
+                </button>
+                <button class="btn btn-primary pull=left" type="submit" ng-click="close()">Close
+                </button>
+            </div>
+        </div>
+        </fieldset>
+        </form>
+    </div>
+</div>
+</div>
+</body>
+</html>
