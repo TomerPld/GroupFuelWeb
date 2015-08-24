@@ -94,9 +94,11 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
         });
         modalInstance.result.then(
             function (res) {
+                updateOwnedCars();
                 // show notification
             },
             function (res) {
+                updateOwnedCars();
                 // show notification
             }
         );
