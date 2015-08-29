@@ -79,3 +79,16 @@ h1 {
 .footer-container {
     padding: 2px;
 }
+
+.welcome-img {
+    width: 100%;
+    height: 100%;
+}
+.android-img {
+    width: 50%;
+    height: 50%;
+}
+
+.tc-chart-js-legend {
+    list-style-type: none;
+}

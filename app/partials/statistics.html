@@ -11,7 +11,7 @@
                         <div class="col-md-8">
                             <select class="form-control" id="make" ui-select2 ng-model="selection.make" data-placeholder="Choose a Manufacturer">
                                 <option value=""></option>
-                                <option ng-repeat="make in options.makes" value="{{ make }}">{{ make }}</option>
+                                <option ng-repeat="make in options.makes.sort()" value="{{ make }}">{{ make }}</option>
                             </select>
                         </div>
                     </div>
@@ -24,7 +24,7 @@
                         <div class="col-md-8">
                             <select class="form-control" id="model" ui-select2 ng-model="selection.model" data-placeholder="Choose a Model">
                                 <option value=""></option>
-                                <option ng-repeat="model in options.models | unique: 'Model'" value="{{ model.Model }}">{{ model.Model}}</option>
+                                <option ng-repeat="model in options.models | unique: 'Model' | orderBy:'Model'" value="{{ model.Model }}">{{ model.Model}}</option>
                             </select>
                         </div>
                     </div>

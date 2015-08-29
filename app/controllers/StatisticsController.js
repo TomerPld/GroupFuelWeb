@@ -1,7 +1,7 @@
 /**
  * Created by Tomer on 07/04/2015.
  */
-app.controller('StatisticsController', function ($scope, ngTableParams, $filter, StatisticsService, ParameterService, CarModel) {
+app.controller('StatisticsController', function ($scope, ngTableParams, $filter, StatisticsService, ParameterService, CarModel, ngNotify) {
     'use strict';
 
     // dictionary with entry for each selection level. each entry is a set of all avaliable values for the level.
@@ -33,9 +33,12 @@ app.controller('StatisticsController', function ($scope, ngTableParams, $filter,
 
     ParameterService.getDistinctFieldFromDB('Make', 'CarModel').then(function (result) {
         $scope.options.makes = result;
-        console.log('recieved ' + result.length + ' makes');
     }, function (err) {
-        console.log(err);
+        ngNotify.set('Error: failed to load manufacturers list.', {
+            type: 'error',
+            position: 'top',
+            duration: 2000
+        });
     });
 
 
@@ -49,6 +52,12 @@ app.controller('StatisticsController', function ($scope, ngTableParams, $filter,
         // Re-Populate next field valus.
         ParameterService.getCarModels(make).then(function (result) {
             $scope.options.models = result.resultSet;
+        }, function (err) {
+            ngNotify.set('Error: failed to load models for ' + make + '.', {
+                type: 'error',
+                position: 'top',
+                duration: 2000
+            });
         });
     });
 

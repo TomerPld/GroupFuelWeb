@@ -1,4 +1,4 @@
-app.controller('SignupController', function ($scope, $location, UserService) {
+app.controller('SignupController', function ($scope, $location, UserService, ngNotify) {
     'use strict';
 
     var CleanUserDetails = {
@@ -33,11 +33,19 @@ app.controller('SignupController', function ($scope, $location, UserService) {
         var details = $scope.signupDetails;
         if (details.userName === "" || details.firstName === "" || details.lastName === "" ||
             details.email === "" || details.password === "" || details.repeatPassword === "") {
-            console.log("empty fields");
+            ngNotify.set('Incomplete form.', {
+                type: 'warning',
+                position: 'top',
+                duration: 2000
+            });
             return;
         }
-        if (details.password != details.repeatPassword) { //TODO should we === ?
-            console.log("password don't match");
+        if (details.password != details.repeatPassword) {
+            ngNotify.set('Error: repeated password does not match.', {
+                type: 'error',
+                position: 'top',
+                duration: 2000
+            });
             return;
         }
         var newUser = new Parse.User();
@@ -51,14 +59,22 @@ app.controller('SignupController', function ($scope, $location, UserService) {
         newUser.set("BirthDate", details.birthDate);
         newUser.signUp(null, {
             success: function (user) {
-                //TODO add notification for succesful sign up
+                ngNotify.set('Welcome to GroupFuel :)', {
+                    type: 'info',
+                    position: 'top',
+                    duration: 2000
+                });
                 $scope.UserService.logged = true;
                 $scope.$apply(function () {
                     $location.url('/welcome');
                 });
             },
             error: function (user, error) {
-                alert("Error: " + error.code + " " + error.message);
+                ngNotify.set('Error: failed to sign up.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             }
         });
     }

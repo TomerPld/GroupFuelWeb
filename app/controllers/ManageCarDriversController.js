@@ -1,7 +1,4 @@
-/**
- * Created by matansab on 8/4/2015.
- */
-app.controller('ManageCarDriversController', function ($scope, $modalInstance, $filter, ngTableParams, carNumber, UserService, ManageCarsService) {
+app.controller('ManageCarDriversController', function ($scope, $modalInstance, $filter, ngTableParams, carNumber, UserService, ManageCarsService, ngNotify) {
     var driverEmail = "";
     (function () {
         $scope.carNumber = carNumber;
@@ -29,15 +26,28 @@ app.controller('ManageCarDriversController', function ($scope, $modalInstance, $
 
     $scope.addDriver = function () {
         if ($scope.driverEmail == UserService.currentUser.get('email')) {
-            alert("You are the Owner, you can't add yourself as a driver");
+            ngNotify.set('Warning: you are the car owner. Drivers are other users you share your car with.', {
+                type: 'warn',
+                position: 'top',
+                duration: 2000
+            });
             return;
         }
         ManageCarsService.addDriver($scope.carNumber, $scope.driverEmail).then(
             function (results) {
                 showDrivers();
+                ngNotify.set('Driver added successfully.', {
+                    type: 'success',
+                    position: 'top',
+                    duration: 2000
+                });
             },
             function (err) {
-                console.log("Failed to add driver, verify that this is a valid email adress " + err);
+                ngNotify.set('Error: failed to add driver, please verify the email address.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             }
         );
     };
@@ -53,7 +63,11 @@ app.controller('ManageCarDriversController', function ($scope, $modalInstance, $
                 }
             },
             function (err) {
-                console.log("Error: failed to load user cars.  " + err);
+                ngNotify.set('Error: failed to load drivers.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             }
         );
     }
@@ -66,9 +80,18 @@ app.controller('ManageCarDriversController', function ($scope, $modalInstance, $
         ManageCarsService.removeDriver($scope.carNumber, driver.email).then(
             function (results) {
                 showDrivers();
+                ngNotify.set('Driver removed successfully.', {
+                    type: 'success',
+                    position: 'top',
+                    duration: 2000
+                });
             },
             function (err) {
-                console.log("Error: query failed in removeDriver  " + err);
+                ngNotify.set('Error: failed to remove driver.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             }
         );
     };

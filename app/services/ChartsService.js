@@ -40,7 +40,7 @@ app.service('ChartsService', function ($q, Fueling, Car) {
         animationEasing : 'easeOutBounce',
         animateRotate : true,
         animateScale : false,
-        legendTemplate : '<ul class="tc-chart-js-legend"><% for (var i=0; i<segments.length; i++){%><li><span style="background-color:<%=segments[i].fillColor%>"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>'
+        legendTemplate : '<ul class="tc-chart-js-legend"><% for (var i=0; i<segments.length; i++){%><li><span style="display:inline-block;height:12px;width:12px;background-color:<%=segments[i].fillColor%>"></span><span> <%if(segments[i].label){%><%=segments[i].label%><%}%></span></li><%}%></ul>'
     };
 
     this.lineOptions =  {
@@ -60,7 +60,7 @@ app.service('ChartsService', function ($q, Fueling, Car) {
         percentageInnerCutout : 70,
         onAnimationProgress: function(){},
         onAnimationComplete: function(){},
-        legendTemplate : '<ul class="tc-chart-js-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="background-color:<%=datasets[i].strokeColor%>"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>'
+        legendTemplate : '<ul class="tc-chart-js-legend"><% for (var i=0; i<datasets.length; i++){%><li><span style="display:inline-block;height:12px;width:12px;background-color:<%=datasets[i].strokeColor%>"></span><span> <%if(datasets[i].label){%><%=datasets[i].label%><%}%></span></li><%}%></ul>'
     };
 
     this.lastSixMonths = lastSixMonths();
@@ -130,7 +130,7 @@ app.service('ChartsService', function ($q, Fueling, Car) {
         return lineChartData;
     };
 
-    var calcMoneyPerMonth = function (fuelList) {
+    var calcMoneyPerMonth = function (fuelList, carDict) {
         var resultDict = {};
         for (var id in carDict) {
             resultDict[carDict[id].CarNumber] = {};

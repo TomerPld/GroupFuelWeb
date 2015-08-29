@@ -1,4 +1,4 @@
-var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui.select2', 'tc.chartjs', 'ngMap']);
+var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui.select2', 'tc.chartjs', 'ngMap', 'ngNotify']);
 
 (function () {
     'use strict';
@@ -242,6 +242,9 @@ var app = angular.module('GroupFuel', ['ui.bootstrap', 'ngRoute', 'ngTable', 'ui
         }).when('/edit-profile', {
             controller: 'EditProfileController',
             templateUrl: 'GroupFuelWeb/app/partials/editprofile.html'
+        }).when('/manual', {
+            controller: 'NavigationController',
+            templateUrl: 'GroupFuelWeb/app/partials/manual.html'
         }).otherwise({redirectTo: '/welcome'});
     });
 

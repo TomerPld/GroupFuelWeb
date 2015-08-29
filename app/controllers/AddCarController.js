@@ -1,8 +1,4 @@
-/**
- * Created by matansab on 8/21/2015.
- */
-
-app.controller('AddCarController', function ($scope, ngTableParams, $filter, StatisticsService, ParameterService, CarModel, ManageCarsService, $modalInstance) {
+app.controller('AddCarController', function ($scope, ngTableParams, $filter, ParameterService, CarModel, ManageCarsService, $modalInstance, ngNotify) {
     'use strict';
 
     // dictionary with entry for each selection level. each entry is a set of all avaliable values for the level.
@@ -34,9 +30,12 @@ app.controller('AddCarController', function ($scope, ngTableParams, $filter, Sta
 
     ParameterService.getDistinctFieldFromDB('Make', 'CarModel').then(function (result) {
         $scope.options.makes = result;
-        console.log('recieved ' + result.length + ' makes');
     }, function (err) {
-        console.log(err);
+        ngNotify.set('Error: failed to load manufacturers list.', {
+            type: 'error',
+            position: 'top',
+            duration: 2000
+        });
     });
 
 
@@ -50,6 +49,12 @@ app.controller('AddCarController', function ($scope, ngTableParams, $filter, Sta
         // Re-Populate next field valus.
         ParameterService.getCarModels(make).then(function (result) {
             $scope.options.models = result.resultSet;
+        }, function (err) {
+            ngNotify.set('Error: failed to load models for ' + make + '.', {
+                type: 'error',
+                position: 'top',
+                duration: 2000
+            });
         });
     });
 
@@ -102,20 +107,43 @@ app.controller('AddCarController', function ($scope, ngTableParams, $filter, Sta
         var carDetails= {};
         var selection = $scope.selection;
         selection.fuelType = selection.fuel;
+        var mileage = Number(selection.mileage);
+        var carnum = Number(selection.carNumber);
+        if (isNaN(mileage) || mileage < 0) {
+            ngNotify.set('Warning: failed to add car - mileage must be a positive number.', {
+                type: 'warn',
+                position: 'top',
+                duration: 2000
+            });
+            return;
+        }
+        if (isNaN(carnum) || carnum < 0 || selection.carNumber.length !== 7) {
+            ngNotify.set('Warning: failed to add car - car nuber must be a positive, 7 digits number.', {
+                type: 'warn',
+                position: 'top',
+                duration: 2000
+            });
+            return;
+        }
 
         ManageCarsService.addCar(selection).then(
             function (results) {
+                ngNotify.set('Car added successfuly.', {
+                    type: 'success',
+                    position: 'top',
+                    duration: 2000
+                });
                 $scope.close();
-                console.dir(results);
             },
             function (err) {
-                console.log("Error: Failed to add a car   " + JSON.stringify(err));
+                ngNotify.set('Error: failed to add car.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             }
         );
-
-
     };
-
 
     $scope.close = function () {
         $modalInstance.close();

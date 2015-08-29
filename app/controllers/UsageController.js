@@ -1,7 +1,7 @@
 /**
  * Created by Tomer on 07/04/2015.
  */
-app.controller('UsageController', function ($scope, $filter, $q, ChartsService, UserService, UsageService, ngTableParams, Fueling, Car) {
+app.controller('UsageController', function ($scope, $filter, $q, ChartsService, UserService, UsageService, ngTableParams, Fueling, Car, ngNotify) {
     'use strict';
 
     $scope.chartConfig = {};
@@ -63,29 +63,35 @@ app.controller('UsageController', function ($scope, $filter, $q, ChartsService, 
     $scope.$watch('UserService.logged', function (logged) {
         $scope.data = angular.copy(cleanData);
         getCars();
-        getFuelEvents();
     });
 
     $scope.$watch('chartConfig.pieChosenChart', updatePieCharts);
+    $scope.$watch('chartConfig.lineChosenChart', updateLineCharts);
+
 
     $scope.$watch('data.fuelEvents', function (events) {
-        if ($scope.data.userCars !== []) {
-            updatelineCharts();
+        if (events.length > 0) {
+            updateLineCharts();
         }
     });
 
     $scope.$watch('data.userCars', function (cars) {
-        if ($scope.data.fuelEvents !== []) {
-            updatelineCharts();
+        if (Object.keys(cars).length > 0) {
+            var vals = Object.keys(cars).map(function (key) {
+                var pointer = new Parse.Object("Car");
+                pointer.id = key;
+                return pointer;
+            });
+            getFuelEvents(vals);
         }
     });
 
 
-    function getFuelEvents() {
+    function getFuelEvents(vals) {
         if (!UserService.logged || $scope.data.logFull) {
             return;
         }
-        UsageService.getFuelEvents(UserService.currentUser, $scope.data.fuelEvents.length).then(
+        UsageService.getFuelEvents(vals, $scope.data.fuelEvents.length).then(
             function (results) {
                 if (results.length < 1000) {
                     $scope.data.logFull = true;
@@ -93,7 +99,11 @@ app.controller('UsageController', function ($scope, $filter, $q, ChartsService, 
                 $scope.data.fuelEvents = $scope.data.fuelEvents.concat(results);
             },
             function (err) {
-                console.log("Error: " + err);
+                ngNotify.set('Error: failed to load fueling data.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             }
         );
     }
@@ -108,7 +118,11 @@ app.controller('UsageController', function ($scope, $filter, $q, ChartsService, 
                 updateUsage();
             },
             function (err) {
-                console.log("Error: " + err);
+                ngNotify.set('Error: failed to load owned cars.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             }
         );
     }
@@ -134,7 +148,11 @@ app.controller('UsageController', function ($scope, $filter, $q, ChartsService, 
                 $scope.tableParams.total($scope.data.usage.length);
             },
             function (err) {
-                console.log("Error: " + err);
+                ngNotify.set('Error: failed to personal usage info.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             }
         );
     }
@@ -146,7 +164,7 @@ app.controller('UsageController', function ($scope, $filter, $q, ChartsService, 
         $scope.chartConfig.pieChartData = $scope.chartConfig.pieCharts[$scope.chartConfig.pieChosenChart]($scope.data.usage);
     }
 
-    function updatelineCharts () {
+    function updateLineCharts () {
         if ($scope.chartConfig.lineChosenChart === undefined) {
             return;
         }

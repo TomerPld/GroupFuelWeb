@@ -1,7 +1,7 @@
 /**
  * Created by matansab on 5/18/2015.
  */
-app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTableParams, UserService, ManageCarsService, Car, User) {
+app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTableParams, UserService, ManageCarsService, Car, User, ngNotify) {
 
     'use strict';
     (function () {
@@ -56,7 +56,11 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
                 $scope.tableParams.total($scope.userCars.length);
             },
             function (err) {
-                console.log("Error: failed to load user cars " + err);
+                ngNotify.set('Error: failed to load owned cars.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             }
         );
     }
@@ -69,7 +73,11 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
                 $scope.tableParams2.total($scope.userDriving.length);
             },
             function (err) {
-                console.log("Error: failed to load user driving cars. " + err)
+                ngNotify.set('Error: failed to cars shared with you.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             });
     }
 
@@ -80,9 +88,18 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
         ManageCarsService.removeCar(carNumber).then(
             function (results) {
                 updateOwnedCars();
+                ngNotify.set('Car removed successfully.', {
+                    type: 'success',
+                    position: 'top',
+                    duration: 2000
+                });
             },
             function (err) {
-                console.log("Error: query failed in removeCar " + err);
+                ngNotify.set('Error: failed to remove car.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             }
         );
     };
@@ -95,11 +112,9 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
         modalInstance.result.then(
             function (res) {
                 updateOwnedCars();
-                // show notification
             },
             function (res) {
                 updateOwnedCars();
-                // show notification
             }
         );
     };
@@ -120,6 +135,26 @@ app.controller('ManageCarsController', function ($scope, $filter, $modal, ngTabl
             },
             function (res) {
                 // show notification
+            }
+        );
+    };
+    $scope.removeDriver = function (car) {
+        var carNum = car.get("CarNumber");
+        ManageCarsService.removeDriver(carNum, UserService.currentUser.get("email")).then(
+            function () {
+                ngNotify.set('Car removed successfully.', {
+                    type: 'success',
+                    position: 'top',
+                    duration: 2000
+                });
+                updateDrivingCars();
+            },
+            function () {
+                ngNotify.set('Error: failed to leave car.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             }
         );
     };

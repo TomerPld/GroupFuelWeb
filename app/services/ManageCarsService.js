@@ -83,34 +83,6 @@ app.service('ManageCarsService', function ($q) {
         return defer.promise;
     };
 
-    //TODO - move parameter functions (get...) to ParameterService
-    this.getCarMakes = function () {
-        var defer = $q.defer();
-
-        Parse.Cloud.run('getCarMakes', {}, {
-            success: function (results) {
-                defer.resolve(results);
-            },
-            error: function (err) {
-                defer.reject(err);
-            }
-        });
-        return defer.promise;
-    };
-
-    this.getCarModels = function (make) {
-        var defer = $q.defer();
-        Parse.Cloud.run('getCarModels', {'Make': make}, {
-            success: function (results) {
-                defer.resolve(results);
-            },
-            error: function (err) {
-                defer.reject(err);
-            }
-        });
-        return defer.promise;
-    };
-
     this.addCar = function (carDetails){
         console.log(JSON.stringify(carDetails));
         var defer = $q.defer();

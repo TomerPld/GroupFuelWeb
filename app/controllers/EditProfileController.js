@@ -1,7 +1,7 @@
 /**
  * Created by matansab on 5/18/2015.
  */
-app.controller('EditProfileController', function ($scope, $location, UserService) {
+app.controller('EditProfileController', function ($scope, $location, UserService, ngNotify) {
     'use strict';
     var CleanUserDetails = {
         userName: "",
@@ -31,10 +31,18 @@ app.controller('EditProfileController', function ($scope, $location, UserService
         }
         UserService.doUpdate($scope.userDetails).then(
             function (user) {
-                console.log("User: " + JSON.stringify(user));
+                ngNotify.set('User details were updated successfully.', {
+                    type: 'success',
+                    position: 'top',
+                    duration: 2000
+                });
             },
             function (err) {
-                console.log("Error: " + JSON.stringify(err));
+                ngNotify.set('Error: failed to update user details.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             }
         );
     };
@@ -49,7 +57,7 @@ app.controller('EditProfileController', function ($scope, $location, UserService
             $scope.userDetails.firstName = currentUser.get('FirstName');
             $scope.userDetails.lastName = currentUser.get('LastName');
             $scope.userDetails.email = currentUser.get('email');
-            $scope.userDetails.birthDate = new Date(currentUser.get('BirthDate')) - 1;
+            $scope.userDetails.birthDate = new Date(currentUser.get('BirthDate'));
             $scope.userDetails.gender = currentUser.get('Gender');
         }
         else {

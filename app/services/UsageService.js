@@ -4,11 +4,11 @@
 app.service('UsageService', function ($q){
    'use strict';
 
-    this.getFuelEvents = function (user, skip) {
+    this.getFuelEvents = function (cars, skip) {
         var defer = $q.defer();
         var query = new Parse.Query("Fueling");
-        query.equalTo("User", user);
         query.include("Car");
+        query.containedIn("Car", cars);
         query.include("User");
         query.include("GasStation")
         query.limit(1000);

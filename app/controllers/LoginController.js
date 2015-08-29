@@ -1,4 +1,4 @@
-app.controller('LoginController', function ($scope, $modalInstance, $location, UserService) {
+app.controller('LoginController', function ($scope, $modalInstance, $location, UserService, ngNotify) {
     'use strict';
     var cleanLoginDetails = {
         username : "",
@@ -20,14 +20,22 @@ app.controller('LoginController', function ($scope, $modalInstance, $location, U
         }
         Parse.User.logIn(details.username, details.password, {
             success: function(user) {
-                console.log("login worked");
+                ngNotify.set('Welcome back, ' + user.get("username"), {
+                    type: 'success',
+                    position: 'top',
+                    duration: 2000
+                });
                 $scope.UserService.logged = true;
                 $scope.UserService.currentUser = user;
                 $modalInstance.close("user " + details.username + " logged in succesfully");
             },
             error: function(user, error) {
                 $scope.loginDetails.password = "";
-                console.log("login failed with error: " + error);
+                ngNotify.set('Error: failed to login.', {
+                    type: 'error',
+                    position: 'top',
+                    duration: 2000
+                });
             }
         });
     };

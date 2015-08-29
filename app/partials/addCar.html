@@ -5,7 +5,7 @@
     <title></title>
 </head>
 <body>
-<div class="col-md-14">
+<div class="col-md-12">
     <div class="panel panel-primary">
         <div class="panel-heading">Add A Car</div>
         <div class="panel-body">
@@ -52,8 +52,7 @@
                                         data-placeholder="Choose The Year">
                                     <option value=""></option>
                                     <option ng-repeat="year in options.years | unique: 'Year'" value="{{ year.Year }}">
-                                        {{
-                                        year.Year }}
+                                        {{ year.Year }}
                                     </option>
                                 </select>
                             </div>
@@ -85,8 +84,7 @@
                                         data-placeholder="Choose Gear">
                                     <option value=""></option>
                                     <option ng-repeat="gear in options.gears | unique: 'Gear'" value="{{ gear.Gear }}">
-                                        {{
-                                        gear.Gear }}
+                                        {{ gear.Gear }}
                                     </option>
                                 </select>
                             </div>

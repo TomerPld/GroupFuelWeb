@@ -9,13 +9,7 @@
         </p>
         <p>Don't have an account yet? <a href="/signup" class="btn btn-default">Create Account</a></p>
     </div>
-    <div class="alert alert-warning" role="alert" ng-if="UserService.logged && userCars.length==0">
-        <h4>Attention
-            <small>You Don't own any car.</small>
-        </h4>
-        <p>please add cars you own</p>
-    </div>
-    <div ng-if="UserService.logged && userCars.length!=0">
+    <div ng-if="UserService.logged">
         <div class="panel panel-primary">
             <div class="panel-heading">Cars I Own</div>
             <div class="panel-body">
@@ -47,7 +41,7 @@
                         <td class="text-center" data-title="'Model'">{{ car.Model }}</td>
                         <td class="text-center" data-title="'Mileage'">{{ car.Mileage }}</td>
                         <td class="text-center">
-                            <button class="btn btn-danger btn-block" ng-click="removeCar(car)">Leave Car</button>
+                            <button class="btn btn-danger btn-block" ng-click="removeDriver(car)">Leave Car</button>
                         </td>
                     </tr>
                 </table>
